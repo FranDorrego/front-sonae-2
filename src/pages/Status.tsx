@@ -3,7 +3,7 @@ import { Produto } from "@/types";
 import Layout from "@/components/Layout";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
-import StoreMapRealistic from "@/components/StoreMapRealistic";
+import StoreMapPremium from "@/components/StoreMapPremium";
 import ProductModal from "@/components/ProductModal";
 import { get_data_stock } from "@/services/mockStockData";
 
@@ -33,13 +33,13 @@ export default function Status() {
 
   return (
     <Layout>
-      <div className="p-4 md:p-8">
+      <div className="p-4 md:p-6 animate-fade-in">
         {erro && <ErrorMessage message={erro} />}
 
         {isLoading ? (
           <LoadingSpinner />
         ) : (
-          <StoreMapRealistic
+          <StoreMapPremium
             produtos={produtos}
             onProductClick={setSelectedProduct}
           />
