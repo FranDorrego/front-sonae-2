@@ -19,8 +19,15 @@ export async function api<T>(
   options?: RequestInit
 ): Promise<ApiResponse<T>> {
   try {
-    const sessionToken = getSessionCookie();
+    // 
+    return {
+      sucesso: false,
+      erro: "Não foi possível completar a operação. Por favor, tente novamente.",
+    };
 
+
+    const sessionToken = getSessionCookie();
+    
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
       headers: {
