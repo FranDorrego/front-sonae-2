@@ -7,48 +7,50 @@ export default function TopNav() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="bg-primary border-b border-primary/20 px-4 py-3 flex items-center justify-between">
-      <img src={logo} alt="Sonae" className="h-8 object-contain" />
-      
-      <nav className="flex gap-6">
-        <Link
-          to="/status"
-          className={`flex flex-col items-center gap-1 transition-colors ${
-            isActive("/status")
-              ? "text-secondary"
-              : "text-primary-foreground/70 hover:text-primary-foreground"
-          }`}
-        >
-          <MapPin className="w-5 h-5" />
-          <span className="text-xs font-medium">Status</span>
-        </Link>
+    <header className="bg-gradient-to-r from-primary via-primary to-primary/95 shadow-md">
+      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+        <img src={logo} alt="Sonae" className="h-10 object-contain" />
         
-        <Link
-          to="/conselhos"
-          className={`flex flex-col items-center gap-1 transition-colors ${
-            isActive("/conselhos")
-              ? "text-secondary"
-              : "text-primary-foreground/70 hover:text-primary-foreground"
-          }`}
-        >
-          <Lightbulb className="w-5 h-5" />
-          <span className="text-xs font-medium">Conselhos</span>
-        </Link>
+        <nav className="flex gap-1 bg-background/10 backdrop-blur-sm rounded-full p-1">
+          <Link
+            to="/status"
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-full transition-all duration-300 ${
+              isActive("/status")
+                ? "bg-background text-primary shadow-lg"
+                : "text-primary-foreground/80 hover:text-primary-foreground hover:bg-background/20"
+            }`}
+          >
+            <MapPin className="w-4 h-4" />
+            <span className="text-sm font-semibold">Status</span>
+          </Link>
+          
+          <Link
+            to="/conselhos"
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-full transition-all duration-300 ${
+              isActive("/conselhos")
+                ? "bg-background text-primary shadow-lg"
+                : "text-primary-foreground/80 hover:text-primary-foreground hover:bg-background/20"
+            }`}
+          >
+            <Lightbulb className="w-4 h-4" />
+            <span className="text-sm font-semibold">Conselhos</span>
+          </Link>
+          
+          <Link
+            to="/estatisticas"
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-full transition-all duration-300 ${
+              isActive("/estatisticas")
+                ? "bg-background text-primary shadow-lg"
+                : "text-primary-foreground/80 hover:text-primary-foreground hover:bg-background/20"
+            }`}
+          >
+            <BarChart3 className="w-4 h-4" />
+            <span className="text-sm font-semibold">Estatísticas</span>
+          </Link>
+        </nav>
         
-        <Link
-          to="/estatisticas"
-          className={`flex flex-col items-center gap-1 transition-colors ${
-            isActive("/estatisticas")
-              ? "text-secondary"
-              : "text-primary-foreground/70 hover:text-primary-foreground"
-          }`}
-        >
-          <BarChart3 className="w-5 h-5" />
-          <span className="text-xs font-medium">Estatísticas</span>
-        </Link>
-      </nav>
-      
-      <div className="w-8" />
+        <div className="w-10" />
+      </div>
     </header>
   );
 }

@@ -47,10 +47,13 @@ export default function Conselhos() {
 
   return (
     <Layout>
-      <div className="p-6 md:p-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
+      <div className="container mx-auto p-4 md:p-8 max-w-4xl">
+        <h1 className="text-3xl font-bold text-foreground mb-2">
           Conselhos IA
         </h1>
+        <p className="text-muted-foreground mb-6">
+          Sugestões inteligentes baseadas em dados históricos
+        </p>
 
         {erro && <ErrorMessage message={erro} />}
 
@@ -61,7 +64,7 @@ export default function Conselhos() {
             Sem conselhos no momento
           </p>
         ) : (
-          <div className="space-y-4 max-w-2xl">
+          <div className="space-y-4">
             {conselhos.map((conselho) => (
               <ConselhoCard
                 key={conselho.id}

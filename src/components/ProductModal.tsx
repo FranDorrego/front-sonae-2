@@ -49,25 +49,25 @@ export default function ProductModal({ produto, isOpen, onClose }: ProductModalP
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{produto.nome}</DialogTitle>
+          <DialogTitle className="text-xl font-bold">{produto.nome}</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
+        <div className="space-y-5 py-4">
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-muted-foreground">Status</p>
-              <p className="font-semibold">{getStatusText()}</p>
+            <div className="bg-muted/30 p-3 rounded-lg">
+              <p className="text-xs text-muted-foreground mb-1">Status</p>
+              <p className="font-bold text-lg">{getStatusText()}</p>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Localização</p>
-              <p className="font-semibold">{produto.localizacao.zona}</p>
+            <div className="bg-muted/30 p-3 rounded-lg">
+              <p className="text-xs text-muted-foreground mb-1">Localização</p>
+              <p className="font-bold text-lg">{produto.localizacao.zona}</p>
             </div>
           </div>
 
           <div>
-            <p className="text-sm text-muted-foreground">Nível atual</p>
-            <div className="flex items-center gap-3 mt-1">
-              <div className="flex-1 bg-muted rounded-full h-3">
+            <p className="text-sm font-medium text-muted-foreground mb-2">Nível atual</p>
+            <div className="flex items-center gap-3">
+              <div className="flex-1 bg-muted rounded-full h-4 overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all ${
                     produto.status === "ok"
@@ -79,13 +79,15 @@ export default function ProductModal({ produto, isOpen, onClose }: ProductModalP
                   style={{ width: `${produto.percentual}%` }}
                 />
               </div>
-              <span className="text-sm font-semibold">{produto.percentual}%</span>
+              <span className="text-lg font-bold min-w-[50px] text-right">
+                {produto.percentual}%
+              </span>
             </div>
           </div>
 
           {(produto.status === "baixo" || produto.status === "critico") && (
             <div>
-              <label className="text-sm font-medium mb-2 block">
+              <label className="text-sm font-semibold mb-2 block">
                 Comentário
               </label>
               <Textarea
@@ -93,26 +95,29 @@ export default function ProductModal({ produto, isOpen, onClose }: ProductModalP
                 onChange={(e) => setComentario(e.target.value)}
                 placeholder="Ex: Já está completo, Sem stock no depósito..."
                 rows={3}
+                className="resize-none"
               />
             </div>
           )}
 
-          <div className="flex gap-3">
+          <div className="flex gap-3 pt-2">
             <Button
               onClick={() => handleSubmit("ok")}
               disabled={isLoading}
-              className="flex-1"
+              className="flex-1 font-semibold"
+              size="lg"
             >
-              <Check className="w-4 h-4 mr-2" />
+              <Check className="w-5 h-5 mr-2" />
               OK
             </Button>
             <Button
               onClick={() => handleSubmit("nao")}
               disabled={isLoading}
               variant="outline"
-              className="flex-1"
+              className="flex-1 font-semibold"
+              size="lg"
             >
-              <X className="w-4 h-4 mr-2" />
+              <X className="w-5 h-5 mr-2" />
               Não se Faz
             </Button>
           </div>

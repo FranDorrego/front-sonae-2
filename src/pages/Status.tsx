@@ -3,7 +3,7 @@ import { Produto } from "@/types";
 import Layout from "@/components/Layout";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
-import StoreMap from "@/components/StoreMap";
+import StoreMapRealistic from "@/components/StoreMapRealistic";
 import ProductModal from "@/components/ProductModal";
 import { get_data_stock } from "@/services/mockStockData";
 
@@ -39,7 +39,7 @@ export default function Status() {
         {isLoading ? (
           <LoadingSpinner />
         ) : (
-          <StoreMap
+          <StoreMapRealistic
             produtos={produtos}
             onProductClick={setSelectedProduct}
           />

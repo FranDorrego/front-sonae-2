@@ -36,30 +36,30 @@ export default function ConselhoCard({
   return (
     <div
       className={cn(
-        "bg-card border-l-4 rounded-lg p-4 space-y-3",
+        "bg-card border-l-4 rounded-xl p-5 space-y-4 shadow-md hover:shadow-lg transition-shadow",
         getPrioridadeColor()
       )}
     >
-      <div className="flex items-start gap-3">
-        <div className="p-2 bg-secondary/10 rounded-lg text-secondary">
+      <div className="flex items-start gap-4">
+        <div className="p-3 bg-secondary/10 rounded-xl text-secondary flex-shrink-0">
           {getIcon()}
         </div>
         <div className="flex-1">
-          <h3 className="font-semibold text-card-foreground">
+          <h3 className="font-bold text-lg text-card-foreground">
             {conselho.titulo}
           </h3>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
             {conselho.descricao}
           </p>
         </div>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-3">
         <Button
           onClick={onAceitar}
           disabled={isLoading}
-          size="sm"
-          className="flex-1"
+          size="lg"
+          className="flex-1 font-semibold"
         >
           <Check className="w-4 h-4 mr-2" />
           Aceitar
@@ -68,8 +68,8 @@ export default function ConselhoCard({
           onClick={onRejeitar}
           disabled={isLoading}
           variant="outline"
-          size="sm"
-          className="flex-1"
+          size="lg"
+          className="flex-1 font-semibold"
         >
           <X className="w-4 h-4 mr-2" />
           Rejeitar
