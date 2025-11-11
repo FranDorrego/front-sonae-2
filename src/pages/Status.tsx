@@ -3,7 +3,7 @@ import { Produto } from "@/types";
 import Layout from "@/components/Layout";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
-import ProductZone from "@/components/ProductZone";
+import StoreMap from "@/components/StoreMap";
 import ProductModal from "@/components/ProductModal";
 import { get_data_stock } from "@/services/mockStockData";
 
@@ -33,25 +33,16 @@ export default function Status() {
 
   return (
     <Layout>
-      <div className="p-6 md:p-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-          Status do Supermercado
-        </h1>
-
+      <div className="p-4 md:p-8">
         {erro && <ErrorMessage message={erro} />}
 
         {isLoading ? (
           <LoadingSpinner />
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {produtos.map((produto) => (
-              <ProductZone
-                key={produto.id}
-                produto={produto}
-                onClick={() => setSelectedProduct(produto)}
-              />
-            ))}
-          </div>
+          <StoreMap
+            produtos={produtos}
+            onProductClick={setSelectedProduct}
+          />
         )}
 
         {selectedProduct && (
