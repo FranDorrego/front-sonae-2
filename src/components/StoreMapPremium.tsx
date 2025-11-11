@@ -97,8 +97,8 @@ export default function StoreMapPremium({
   };
 
   return (
-    <div className="w-full h-[calc(100vh-80px)] sm:h-[calc(100vh-90px)] lg:h-[calc(100vh-100px)] flex items-center justify-center p-2 sm:p-4 lg:p-6">
-      <div className="w-full h-full max-w-6xl bg-gradient-to-br from-background via-muted/20 to-background rounded-xl lg:rounded-2xl p-3 sm:p-5 lg:p-8 shadow-xl lg:shadow-2xl border border-border/50 flex flex-col overflow-hidden">
+    <div className="w-full flex items-center justify-center p-2 sm:p-4 lg:p-6">
+      <div className="w-full max-w-7xl bg-gradient-to-br from-background via-muted/20 to-background rounded-xl lg:rounded-2xl p-3 sm:p-5 lg:p-8 shadow-xl lg:shadow-2xl border border-border/50 flex flex-col">
         <div className="text-center mb-3 sm:mb-4 lg:mb-6">
           <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-1 sm:mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             Mapa de Stock en Tiempo Real
@@ -109,7 +109,7 @@ export default function StoreMapPremium({
         </div>
 
         {/* Grid principal do supermercado */}
-        <div className="relative bg-gradient-to-br from-muted/10 to-background/50 rounded-lg lg:rounded-xl p-2 sm:p-4 lg:p-6 border border-border/30 flex-1 flex flex-col justify-between overflow-hidden">
+        <div className="relative bg-gradient-to-br from-muted/10 to-background/50 rounded-lg lg:rounded-xl p-3 sm:p-5 lg:p-8 border border-border/30">
           
           {/* ENTRADA - Parte superior */}
           <div className="mb-3 sm:mb-4 lg:mb-6 text-center">
@@ -119,7 +119,7 @@ export default function StoreMapPremium({
           </div>
 
           {/* Layout simplificado */}
-          <div className="flex-1 flex flex-col gap-3 sm:gap-5 lg:gap-8 justify-between">
+          <div className="flex flex-col gap-4 sm:gap-6 lg:gap-10">
             
             {/* Corredor Superior - Cítricos */}
             <div>
@@ -138,14 +138,14 @@ export default function StoreMapPremium({
             </div>
 
             {/* Área Central con 3 corredores */}
-            <div className="flex-1 grid grid-cols-4 gap-3 sm:gap-5 lg:gap-8">
+            <div className="grid grid-cols-4 gap-3 sm:gap-5 lg:gap-8">
               
               {/* Corredor Izquierdo - Tropicales */}
               <div className="flex flex-col">
                 <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-primary text-center mb-2 sm:mb-3 lg:mb-4 bg-primary/10 rounded-md lg:rounded-lg px-2 sm:px-2.5 lg:px-3 py-1 sm:py-1.5 lg:py-2 shadow-sm">
                   Tropicales
                 </div>
-                <div className="flex-1 flex flex-col justify-around gap-2 sm:gap-3 lg:gap-4">
+                <div className="flex flex-col gap-2 sm:gap-3 lg:gap-4">
                   {[2, 3, 4].map((y) => (
                     <div key={`b1-${y}`}>{renderProductBox(1, y, "small")}</div>
                   ))}
@@ -178,7 +178,7 @@ export default function StoreMapPremium({
                 <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-primary text-center mb-2 sm:mb-3 lg:mb-4 bg-primary/10 rounded-md lg:rounded-lg px-2 sm:px-2.5 lg:px-3 py-1 sm:py-1.5 lg:py-2 shadow-sm">
                   Verduras
                 </div>
-                <div className="flex-1 flex flex-col justify-around gap-2 sm:gap-3 lg:gap-4">
+                <div className="flex flex-col gap-2 sm:gap-3 lg:gap-4">
                   {[2, 3, 4].map((y) => (
                     <div key={`b2-${y}`}>{renderProductBox(4, y, "small")}</div>
                   ))}
