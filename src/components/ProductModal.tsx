@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Produto } from "@/types";
-import { X, Check } from "lucide-react";
+import { X, Check, PackagePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -37,12 +37,32 @@ export default function ProductModal({ produto, isOpen, onClose }: ProductModalP
     }
   };
 
+  const handleEncontradoStock = async () => {
+    setIsLoading(true);
+    
+    const response = await post_comentario_produto({
+      produtoId: produto.id,
+      comentario: "Stock encontrado - será reposto em breve",
+      timestamp: new Date().toISOString(),
+    });
+
+    setIsLoading(false);
+
+    if (response.sucesso) {
+      toast.success("Stock reportado com sucesso");
+      onClose();
+    } else {
+      toast.error(response.erro || "Erro ao processar");
+    }
+  };
+
   const getStatusText = () => {
     switch (produto.status) {
       case "ok": return "Normal";
       case "baixo": return "Atenção necessária";
       case "critico": return "Crítico";
       case "desconhecido": return "Desconhecido";
+      case "sem-estoque": return "Sem Stock no Depósito";
     }
   };
 
@@ -77,6 +97,8 @@ export default function ProductModal({ produto, isOpen, onClose }: ProductModalP
                       ? "bg-warning"
                       : produto.status === "desconhecido"
                       ? "bg-unknown"
+                      : produto.status === "sem-estoque"
+                      ? "bg-muted-foreground"
                       : "bg-danger"
                   }`}
                   style={{ width: `${produto.percentual}%` }}
@@ -87,6 +109,14 @@ export default function ProductModal({ produto, isOpen, onClose }: ProductModalP
               </span>
             </div>
           </div>
+
+          {produto.status === "sem-estoque" && (
+            <div className="bg-muted/50 p-4 rounded-lg border border-muted-foreground/20">
+              <p className="text-sm text-muted-foreground">
+                <strong>Atenção:</strong> Não há stock disponível no depósito para repor este produto.
+              </p>
+            </div>
+          )}
 
           {(produto.status === "baixo" || produto.status === "critico") && (
             <div>
@@ -103,27 +133,41 @@ export default function ProductModal({ produto, isOpen, onClose }: ProductModalP
             </div>
           )}
 
-          <div className="flex gap-3 pt-2">
-            <Button
-              onClick={() => handleSubmit("ok")}
-              disabled={isLoading}
-              className="flex-1 font-semibold"
-              size="lg"
-            >
-              <Check className="w-5 h-5 mr-2" />
-              OK
-            </Button>
-            <Button
-              onClick={() => handleSubmit("nao")}
-              disabled={isLoading}
-              variant="outline"
-              className="flex-1 font-semibold"
-              size="lg"
-            >
-              <X className="w-5 h-5 mr-2" />
-              Não se Faz
-            </Button>
-          </div>
+          {produto.status === "sem-estoque" ? (
+            <div className="flex gap-3 pt-2">
+              <Button
+                onClick={handleEncontradoStock}
+                disabled={isLoading}
+                className="flex-1 font-semibold"
+                size="lg"
+              >
+                <PackagePlus className="w-5 h-5 mr-2" />
+                Encontrei Mais Stock
+              </Button>
+            </div>
+          ) : (
+            <div className="flex gap-3 pt-2">
+              <Button
+                onClick={() => handleSubmit("ok")}
+                disabled={isLoading}
+                className="flex-1 font-semibold"
+                size="lg"
+              >
+                <Check className="w-5 h-5 mr-2" />
+                OK
+              </Button>
+              <Button
+                onClick={() => handleSubmit("nao")}
+                disabled={isLoading}
+                variant="outline"
+                className="flex-1 font-semibold"
+                size="lg"
+              >
+                <X className="w-5 h-5 mr-2" />
+                Não se Faz
+              </Button>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

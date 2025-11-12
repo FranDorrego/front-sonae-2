@@ -21,10 +21,11 @@ const MOCK_PRODUTOS: Produto[] = [
   { id: "p30", nome: "Melão", categoria: "Frutas", quantidadeAtual: 11, quantidadeMaxima: 100, percentual: 11, status: "critico", localizacao: { zona: "C2", posicao: { x: 3, y: 4 } } },
   { id: "p31", nome: "Kiwi", categoria: "Frutas", quantidadeAtual: 42, quantidadeMaxima: 100, percentual: 42, status: "baixo", localizacao: { zona: "C2", posicao: { x: 4, y: 4 } } },
 
-  // Corredor Lateral Direito - Verduras (3 posições)
+  // Corredor Lateral Direito - Verduras (4 posições)
   { id: "p51", nome: "Tomate", categoria: "Verduras", quantidadeAtual: 87, quantidadeMaxima: 100, percentual: 87, status: "ok", localizacao: { zona: "B2", posicao: { x: 4, y: 2 } } },
   { id: "p52", nome: "Produto Desconhecido", categoria: "Frutas", quantidadeAtual: 0, quantidadeMaxima: 100, percentual: 0, status: "desconhecido", localizacao: { zona: "B2", posicao: { x: 4, y: 3 } } },
-  { id: "p53", nome: "Pimento", categoria: "Verduras", quantidadeAtual: 44, quantidadeMaxima: 100, percentual: 44, status: "baixo", localizacao: { zona: "B2", posicao: { x: 4, y: 4 } } },
+  { id: "p53", nome: "Peras", categoria: "Frutas", quantidadeAtual: 8, quantidadeMaxima: 50, percentual: 16, status: "sem-estoque", localizacao: { zona: "B2", posicao: { x: 4, y: 4 } } },
+  { id: "p54", nome: "Pimento", categoria: "Verduras", quantidadeAtual: 44, quantidadeMaxima: 100, percentual: 44, status: "baixo", localizacao: { zona: "B2", posicao: { x: 4, y: 5 } } },
 
   // Corredor Inferior - Folhosas (4 posições)
   { id: "p37", nome: "Alface", categoria: "Verduras", quantidadeAtual: 78, quantidadeMaxima: 100, percentual: 78, status: "ok", localizacao: { zona: "D1", posicao: { x: 1, y: 5 } } },

@@ -29,6 +29,8 @@ export default function StoreMapPremium({
         return "bg-danger/80 border-danger shadow-xl ring-2 ring-danger/50 animate-pulse";
       case "desconhecido":
         return "bg-unknown/70 border-unknown shadow-lg ring-2 ring-unknown/50";
+      case "sem-estoque":
+        return "bg-muted/60 border-muted-foreground/30";
     }
   };
 
@@ -49,10 +51,12 @@ export default function StoreMapPremium({
     switch (status) {
       case "critico":
         return 4; // Ocupa más espacio
-      case "baixo":
-        return 2; // Espacio mediano
+      case "sem-estoque":
+        return 3.5; // Espacio grande pero sin alerta roja
       case "desconhecido":
         return 3; // Espacio alto para llamar atención
+      case "baixo":
+        return 2; // Espacio mediano
       case "ok":
         return 1; // Espacio mínimo
     }
@@ -84,6 +88,16 @@ export default function StoreMapPremium({
             <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-foreground mb-1" />
             <span className="text-[8px] sm:text-[10px] font-bold text-foreground text-center line-clamp-2">
               Produto<br />Desconhecido
+            </span>
+          </div>
+        ) : produto.status === "sem-estoque" ? (
+          <div className="flex flex-col items-center justify-center p-1 sm:p-2 w-full">
+            <AlertCircle className="w-5 h-5 sm:w-7 sm:h-7 text-muted-foreground mb-0.5 sm:mb-1" />
+            <span className="text-[8px] sm:text-[10px] font-bold text-muted-foreground text-center line-clamp-2 mb-0.5 sm:mb-1">
+              {produto.nome}
+            </span>
+            <span className="text-[10px] sm:text-sm font-bold text-muted-foreground">
+              {produto.percentual}%
             </span>
           </div>
         ) : (
@@ -252,6 +266,13 @@ export default function StoreMapPremium({
               <div className="w-3 h-3 sm:w-3 sm:h-3 rounded border border-unknown sm:border-2 bg-unknown/70 shadow-lg flex-shrink-0" />
               <div className="text-[10px] sm:text-xs">
                 <div className="font-bold text-foreground whitespace-nowrap">Desconhecido</div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-3 h-3 sm:w-3 sm:h-3 rounded border border-muted-foreground/30 sm:border-2 bg-muted/60 flex-shrink-0" />
+              <div className="text-[10px] sm:text-xs">
+                <div className="font-bold text-foreground whitespace-nowrap">Sem Stock no Depósito</div>
               </div>
             </div>
           </div>

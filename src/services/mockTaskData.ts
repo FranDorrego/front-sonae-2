@@ -79,8 +79,16 @@ const tarefasCarniceria: Tarefa[] = [
     status: "erro",
     comentarios: [
       {
+        texto: "Temperatura detectada em 4.5°C - acima do limite de 4°C",
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      },
+      {
         texto: "Técnico foi acionado. Aguardando manutenção.",
-        timestamp: new Date().toISOString(),
+        timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        texto: "Técnico verificou o equipamento. Sensor substituído.",
+        timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
       }
     ]
   },

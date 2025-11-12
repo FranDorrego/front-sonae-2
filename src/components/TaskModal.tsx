@@ -98,6 +98,30 @@ export default function TaskModal({ tarefa, onClose }: TaskModalProps) {
   };
 
   const isPendente = tarefa.status === "pendente";
+  const isErro = tarefa.status === "erro";
+
+  const handleResolver = async () => {
+    try {
+      setIsLoading(true);
+      await atualizarTarefa(tarefa.id, "concluida", {
+        texto: comentario || "Problema resolvido",
+        fotos: fotos.map(f => f.name),
+      });
+      toast({
+        title: "Tarefa Resolvida",
+        description: "A tarefa foi marcada como resolvida com sucesso.",
+      });
+      onClose();
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível atualizar a tarefa.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
@@ -125,10 +149,12 @@ export default function TaskModal({ tarefa, onClose }: TaskModalProps) {
 
           {tarefa.comentarios && tarefa.comentarios.length > 0 && (
             <div>
-              <h3 className="font-semibold mb-2">Comentários Anteriores</h3>
+              <h3 className="font-semibold mb-2">
+                {isErro ? "Histórico do Erro" : "Comentários Anteriores"}
+              </h3>
               <div className="space-y-2">
                 {tarefa.comentarios.map((com, idx) => (
-                  <div key={idx} className="bg-muted p-3 rounded-lg">
+                  <div key={idx} className="bg-muted p-3 rounded-lg border-l-4 border-muted-foreground/30">
                     <p className="text-sm">{com.texto}</p>
                     <p className="text-xs text-muted-foreground mt-1">
                       {new Date(com.timestamp).toLocaleString("pt-BR")}
@@ -139,13 +165,19 @@ export default function TaskModal({ tarefa, onClose }: TaskModalProps) {
             </div>
           )}
 
-          {isPendente && (
+          {(isPendente || isErro) && (
             <>
               <div>
-                <Label htmlFor="comentario">Comentário (opcional)</Label>
+                <Label htmlFor="comentario">
+                  {isErro ? "Adicionar atualização" : "Comentário (opcional)"}
+                </Label>
                 <Textarea
                   id="comentario"
-                  placeholder="Adicione observações sobre a tarefa..."
+                  placeholder={
+                    isErro 
+                      ? "Descreva o progresso ou resolução do problema..."
+                      : "Adicione observações sobre a tarefa..."
+                  }
                   value={comentario}
                   onChange={(e) => setComentario(e.target.value)}
                   className="mt-2"
@@ -178,25 +210,38 @@ export default function TaskModal({ tarefa, onClose }: TaskModalProps) {
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-4">
-                <Button
-                  onClick={handleConcluir}
-                  disabled={isLoading}
-                  className="flex-1"
-                >
-                  <CheckCircle2 className="h-4 w-4 mr-2" />
-                  Marcar como Concluída
-                </Button>
-                <Button
-                  onClick={handleMarcarErro}
-                  disabled={isLoading}
-                  variant="destructive"
-                  className="flex-1"
-                >
-                  <XCircle className="h-4 w-4 mr-2" />
-                  Reportar Erro
-                </Button>
-              </div>
+              {isErro ? (
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    onClick={handleResolver}
+                    disabled={isLoading}
+                    className="flex-1"
+                  >
+                    <CheckCircle2 className="h-4 w-4 mr-2" />
+                    Marcar como Resolvido
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    onClick={handleConcluir}
+                    disabled={isLoading}
+                    className="flex-1"
+                  >
+                    <CheckCircle2 className="h-4 w-4 mr-2" />
+                    Marcar como Concluída
+                  </Button>
+                  <Button
+                    onClick={handleMarcarErro}
+                    disabled={isLoading}
+                    variant="destructive"
+                    className="flex-1"
+                  >
+                    <XCircle className="h-4 w-4 mr-2" />
+                    Reportar Erro
+                  </Button>
+                </div>
+              )}
             </>
           )}
         </div>

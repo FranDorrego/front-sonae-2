@@ -1,6 +1,6 @@
 // Interfaces globais do sistema
 
-export type StatusProduto = "ok" | "baixo" | "critico" | "desconhecido";
+export type StatusProduto = "ok" | "baixo" | "critico" | "desconhecido" | "sem-estoque";
 
 export interface Produto {
   id: string;
