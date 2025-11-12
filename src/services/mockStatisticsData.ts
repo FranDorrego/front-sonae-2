@@ -48,6 +48,7 @@ const MOCK_ESTATISTICAS: Estatistica[] = [
 export async function get_data_estatisticas(): Promise<
   ApiResponse<Estatistica[]>
 > {
+  return { sucesso: true, dados: MOCK_ESTATISTICAS };
   try {
     const response = await api<Estatistica[]>("/estatisticas");
 
