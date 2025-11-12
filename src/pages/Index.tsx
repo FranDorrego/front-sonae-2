@@ -11,15 +11,13 @@ const Index = () => {
   const navigate = useNavigate();
 
   const handleSeleccionRol = (rol: Rol) => {
-    // Guardar el rol seleccionado en localStorage
-    localStorage.setItem("rol_usuario", rol);
     setOpen(false);
     
-    // Redirigir según el rol
+    // Redirigir según el rol con parámetro view en URL
     if (rol === "operador") {
-      navigate("/task");
+      navigate("/task?view=operador");
     } else {
-      navigate("/status");
+      navigate(`/status?view=${rol}`);
     }
   };
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Estatistica } from "@/types";
 import Layout from "@/components/Layout";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -12,6 +13,8 @@ import { Badge } from "@/components/ui/badge";
 type OrdenacaoCampo = "percentualVendas" | "percentualEspaco" | "eficiencia";
 
 export default function Estatisticas() {
+  const [searchParams] = useSearchParams();
+  const view = searchParams.get("view") || "gerente";
   const [estatisticas, setEstatisticas] = useState<Estatistica[]>([]);
   const [lojas, setLojas] = useState<Loja[]>([]);
   const [lojaSeleccionada, setLojaSeleccionada] = useState<number | null>(null);
@@ -118,6 +121,7 @@ export default function Estatisticas() {
       selectedStore={lojaSeleccionada?.toString()}
       onStoreChange={handleLojaChange}
       showMockBadge={usandoMock}
+      currentView={view}
     >
       <div className="container mx-auto p-4 md:p-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">

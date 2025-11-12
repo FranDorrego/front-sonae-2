@@ -9,11 +9,18 @@ interface TopNavProps {
   selectedStore?: string;
   onStoreChange?: (value: string) => void;
   showMockBadge?: boolean;
+  currentView?: string;
 }
 
-export default function TopNav({ stores, selectedStore, onStoreChange, showMockBadge }: TopNavProps) {
+export default function TopNav({ stores, selectedStore, onStoreChange, showMockBadge, currentView }: TopNavProps) {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
+  const isOperador = currentView === "operador";
+  
+  // Construir URLs con el parámetro view
+  const buildUrl = (path: string) => {
+    return currentView ? `${path}?view=${currentView}` : path;
+  };
 
   return (
     <header className="border-b border-border/40 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
@@ -23,77 +30,135 @@ export default function TopNav({ stores, selectedStore, onStoreChange, showMockB
         
         {/* Navigation - hidden on mobile */}
         <nav className="hidden md:flex gap-2 flex-1 justify-center">
-          <Link
-            to="/status"
-            className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg transition-all duration-300 ${
-              isActive("/status")
-                ? "bg-primary text-primary-foreground shadow-md"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-            }`}
-          >
-            <MapPin className="w-4 h-4" />
-            <span className="text-sm font-medium">Status</span>
-          </Link>
-          
-          <Link
-            to="/conselhos"
-            className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg transition-all duration-300 ${
-              isActive("/conselhos")
-                ? "bg-primary text-primary-foreground shadow-md"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-            }`}
-          >
-            <Lightbulb className="w-4 h-4" />
-            <span className="text-sm font-medium">Conselhos</span>
-          </Link>
-          
-          <Link
-            to="/estatisticas"
-            className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg transition-all duration-300 ${
-              isActive("/estatisticas")
-                ? "bg-primary text-primary-foreground shadow-md"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-            }`}
-          >
-            <BarChart3 className="w-4 h-4" />
-            <span className="text-sm font-medium">Estatísticas</span>
-          </Link>
+          {isOperador ? (
+            <>
+              <Link
+                to={buildUrl("/task")}
+                className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg transition-all duration-300 ${
+                  isActive("/task")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Lightbulb className="w-4 h-4" />
+                <span className="text-sm font-medium">Tarefas</span>
+              </Link>
+              
+              <Link
+                to={buildUrl("/status")}
+                className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg transition-all duration-300 ${
+                  isActive("/status")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <MapPin className="w-4 h-4" />
+                <span className="text-sm font-medium">Status</span>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to={buildUrl("/status")}
+                className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg transition-all duration-300 ${
+                  isActive("/status")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <MapPin className="w-4 h-4" />
+                <span className="text-sm font-medium">Status</span>
+              </Link>
+              
+              <Link
+                to={buildUrl("/conselhos")}
+                className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg transition-all duration-300 ${
+                  isActive("/conselhos")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Lightbulb className="w-4 h-4" />
+                <span className="text-sm font-medium">Conselhos</span>
+              </Link>
+              
+              <Link
+                to={buildUrl("/estatisticas")}
+                className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg transition-all duration-300 ${
+                  isActive("/estatisticas")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <BarChart3 className="w-4 h-4" />
+                <span className="text-sm font-medium">Estatísticas</span>
+              </Link>
+            </>
+          )}
         </nav>
 
         {/* Mobile Navigation - icons only */}
         <nav className="flex md:hidden gap-1 flex-1 justify-center">
-          <Link
-            to="/status"
-            className={`flex items-center justify-center p-2 rounded-lg transition-all duration-300 ${
-              isActive("/status")
-                ? "bg-primary text-primary-foreground shadow-md"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-            }`}
-          >
-            <MapPin className="w-4 h-4" />
-          </Link>
-          
-          <Link
-            to="/conselhos"
-            className={`flex items-center justify-center p-2 rounded-lg transition-all duration-300 ${
-              isActive("/conselhos")
-                ? "bg-primary text-primary-foreground shadow-md"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-            }`}
-          >
-            <Lightbulb className="w-4 h-4" />
-          </Link>
-          
-          <Link
-            to="/estatisticas"
-            className={`flex items-center justify-center p-2 rounded-lg transition-all duration-300 ${
-              isActive("/estatisticas")
-                ? "bg-primary text-primary-foreground shadow-md"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-            }`}
-          >
-            <BarChart3 className="w-4 h-4" />
-          </Link>
+          {isOperador ? (
+            <>
+              <Link
+                to={buildUrl("/task")}
+                className={`flex items-center justify-center p-2 rounded-lg transition-all duration-300 ${
+                  isActive("/task")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Lightbulb className="w-4 h-4" />
+              </Link>
+              
+              <Link
+                to={buildUrl("/status")}
+                className={`flex items-center justify-center p-2 rounded-lg transition-all duration-300 ${
+                  isActive("/status")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <MapPin className="w-4 h-4" />
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to={buildUrl("/status")}
+                className={`flex items-center justify-center p-2 rounded-lg transition-all duration-300 ${
+                  isActive("/status")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <MapPin className="w-4 h-4" />
+              </Link>
+              
+              <Link
+                to={buildUrl("/conselhos")}
+                className={`flex items-center justify-center p-2 rounded-lg transition-all duration-300 ${
+                  isActive("/conselhos")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Lightbulb className="w-4 h-4" />
+              </Link>
+              
+              <Link
+                to={buildUrl("/estatisticas")}
+                className={`flex items-center justify-center p-2 rounded-lg transition-all duration-300 ${
+                  isActive("/estatisticas")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <BarChart3 className="w-4 h-4" />
+              </Link>
+            </>
+          )}
         </nav>
         
         {/* Right Side - Store selector and Mock badge */}

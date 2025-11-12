@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import Layout from "@/components/Layout";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
-import TaskCard from "@/components/TaskCard";
 import TaskModal from "@/components/TaskModal";
 import { Tarefa, getTarefasPorZona } from "@/services/mockTaskData";
+import { Clock, AlertCircle } from "lucide-react";
 
 const zonas = [
   { value: "reposicao", label: "Reposição" },
@@ -13,11 +14,13 @@ const zonas = [
 ];
 
 export default function Task() {
+  const [searchParams] = useSearchParams();
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
   const [zonaSelecionada, setZonaSelecionada] = useState("reposicao");
   const [tarefaSelecionada, setTarefaSelecionada] = useState<Tarefa | null>(null);
+  const view = searchParams.get("view") || "gerente";
 
   useEffect(() => {
     carregarTarefas();
@@ -46,9 +49,8 @@ export default function Task() {
     carregarTarefas();
   };
 
-  const tarefasPendentes = tarefas.filter(t => t.status === "pendente");
-  const tarefasConcluidas = tarefas.filter(t => t.status === "concluida");
-  const tarefasComErro = tarefas.filter(t => t.status === "erro");
+  // Filtrar solo tarefas pendentes y con erro (no mostrar completadas)
+  const tarefasActivas = tarefas.filter(t => t.status === "pendente" || t.status === "erro");
 
   return (
     <Layout
@@ -56,8 +58,9 @@ export default function Task() {
       selectedStore={zonaSelecionada}
       onStoreChange={setZonaSelecionada}
       showMockBadge={true}
+      currentView={view}
     >
-      <div className="container mx-auto p-4 md:p-6 max-w-7xl">
+      <div className="container mx-auto p-4 md:p-6 max-w-5xl">
         <div className="mb-6">
           <h1 className="text-2xl md:text-3xl font-bold mb-2">Tarefas</h1>
           <p className="text-muted-foreground">
@@ -69,67 +72,53 @@ export default function Task() {
           <LoadingSpinner />
         ) : erro ? (
           <ErrorMessage message={erro} />
-        ) : tarefas.length === 0 ? (
+        ) : tarefasActivas.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground text-lg">
-              Nenhuma tarefa encontrada para esta zona
+              Nenhuma tarefa pendente para esta zona
             </p>
           </div>
         ) : (
-          <div className="space-y-6">
-            {tarefasPendentes.length > 0 && (
-              <div>
-                <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-yellow-500"></span>
-                  Pendentes ({tarefasPendentes.length})
-                </h2>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {tarefasPendentes.map((tarefa) => (
-                    <TaskCard
-                      key={tarefa.id}
-                      tarefa={tarefa}
-                      onClick={handleTarefaClick}
-                    />
-                  ))}
+          <div className="space-y-3">
+            {tarefasActivas.map((tarefa) => (
+              <div
+                key={tarefa.id}
+                onClick={() => handleTarefaClick(tarefa)}
+                className="bg-card border border-border rounded-lg p-4 hover:shadow-md transition-all cursor-pointer hover:border-primary/50"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-semibold text-base truncate">
+                        {tarefa.titulo}
+                      </h3>
+                      {tarefa.criadaPorIA && (
+                        <span className="shrink-0 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">
+                          IA
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {tarefa.descricao}
+                    </p>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 shrink-0">
+                    {tarefa.status === "erro" ? (
+                      <div className="flex items-center gap-1 text-red-500">
+                        <AlertCircle className="h-4 w-4" />
+                        <span className="text-xs font-medium">Erro</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1 text-yellow-600">
+                        <Clock className="h-4 w-4" />
+                        <span className="text-xs font-medium">Pendente</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            )}
-
-            {tarefasComErro.length > 0 && (
-              <div>
-                <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-red-500"></span>
-                  Com Erro ({tarefasComErro.length})
-                </h2>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {tarefasComErro.map((tarefa) => (
-                    <TaskCard
-                      key={tarefa.id}
-                      tarefa={tarefa}
-                      onClick={handleTarefaClick}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {tarefasConcluidas.length > 0 && (
-              <div>
-                <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-green-500"></span>
-                  Concluídas ({tarefasConcluidas.length})
-                </h2>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {tarefasConcluidas.map((tarefa) => (
-                    <TaskCard
-                      key={tarefa.id}
-                      tarefa={tarefa}
-                      onClick={handleTarefaClick}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
+            ))}
           </div>
         )}
 

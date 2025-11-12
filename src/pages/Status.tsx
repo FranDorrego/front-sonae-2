@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Produto, Zona } from "@/types";
 import Layout from "@/components/Layout";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -11,6 +12,8 @@ import { get_data_stock } from "@/services/mockStockData";
 import { Badge } from "@/components/ui/badge";
 
 export default function Status() {
+  const [searchParams] = useSearchParams();
+  const view = searchParams.get("view") || "gerente";
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [lojas, setLojas] = useState<Loja[]>([]);
   const [lojaSeleccionada, setLojaSeleccionada] = useState<number | null>(null);
@@ -149,6 +152,7 @@ export default function Status() {
       selectedStore={lojaSeleccionada?.toString()}
       onStoreChange={handleLojaChange}
       showMockBadge={usandoMock}
+      currentView={view}
     >
       <div className="h-full animate-fade-in">
         {erro && (

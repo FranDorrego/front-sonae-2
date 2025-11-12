@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Conselho } from "@/types";
 import Layout from "@/components/Layout";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -10,6 +11,8 @@ import { getLojas } from "@/services/backendService";
 import { toast } from "sonner";
 
 export default function Conselhos() {
+  const [searchParams] = useSearchParams();
+  const view = searchParams.get("view") || "gerente";
   const [conselhos, setConselhos] = useState<Conselho[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
@@ -69,6 +72,7 @@ export default function Conselhos() {
       selectedStore={lojaSeleccionada}
       onStoreChange={setLojaSeleccionada}
       showMockBadge={true}
+      currentView={view}
     >
       <div className="container mx-auto p-4 md:p-8 max-w-4xl">
         <div className="flex items-center justify-between mb-2">
