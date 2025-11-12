@@ -145,18 +145,19 @@ export default function Status() {
       stores={lojas}
       selectedStore={lojaSeleccionada?.toString()}
       onStoreChange={handleLojaChange}
+      showMockBadge={usandoMock}
     >
-      <div className="p-4 md:p-6 animate-fade-in">
-        {usandoMock && (
-          <Badge variant="outline" className="text-xs text-muted-foreground border-muted-foreground/30 mb-4">
-            Mock Data
-          </Badge>
+      <div className="h-full animate-fade-in">
+        {erro && (
+          <div className="p-4">
+            <ErrorMessage message={erro} />
+          </div>
         )}
 
-        {erro && <ErrorMessage message={erro} />}
-
         {isLoading ? (
-          <LoadingSpinner />
+          <div className="flex items-center justify-center h-full">
+            <LoadingSpinner />
+          </div>
         ) : (
           <StoreMapPremium
             produtos={produtos}
