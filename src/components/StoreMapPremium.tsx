@@ -150,13 +150,10 @@ export default function StoreMapPremium({
       <div className="w-full h-full max-w-[1600px] bg-gradient-to-br from-background via-muted/10 to-background rounded-lg sm:rounded-xl shadow-2xl border border-border/50 flex flex-col overflow-hidden">
         
         {/* Header */}
-        <div className="text-center py-2 sm:py-3 border-b border-border/30 bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5">
+        <div className="text-center py-1 sm:py-1 border-b border-border/30 bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5">
           <h2 className="text-base sm:text-xl font-bold text-foreground mb-0.5 sm:mb-1">
             Mapa de Loja
           </h2>
-          <p className="text-[10px] sm:text-xs text-muted-foreground hidden sm:block">
-            Tamaño según criticidad • Click para detalles
-          </p>
         </div>
 
         {/* Mapa Principal */}
@@ -164,7 +161,7 @@ export default function StoreMapPremium({
           <div className="h-full p-2 sm:p-4">
             
             {/* ENTRADA */}
-            <div className="text-center mb-2 sm:mb-4">
+            <div className="text-center mb-1 sm:mb-1">
               <div className="inline-block bg-primary/10 border border-primary/30 sm:border-2 rounded px-3 py-1 sm:px-6 sm:py-2">
                 <span className="text-[10px] sm:text-sm font-bold text-primary">↓ ENTRADA ↓</span>
               </div>
@@ -208,7 +205,7 @@ export default function StoreMapPremium({
             </div>
 
             {/* CAIXAS */}
-            <div className="text-center mt-2 sm:mt-4">
+            <div className="text-center mt-1 sm:mt-1">
               <div className="inline-block bg-primary/10 border border-primary/30 sm:border-2 rounded px-3 py-1 sm:px-6 sm:py-2">
                 <span className="text-[10px] sm:text-sm font-bold text-primary">→ CAIXAS →</span>
               </div>
@@ -220,26 +217,23 @@ export default function StoreMapPremium({
         <div className="py-2 sm:py-3 px-2 sm:px-4 border-t border-border/30 bg-muted/5">
           <div className="flex justify-center gap-2 sm:gap-8 flex-wrap">
             <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded border border-muted-foreground/10 sm:border-2 bg-muted/40 flex-shrink-0" />
+              <div className="w-3 h-3 sm:w-3 sm:h-3 rounded border border-muted-foreground/10 sm:border-2 bg-muted/40 flex-shrink-0" />
               <div className="text-[10px] sm:text-xs">
                 <div className="font-bold text-foreground whitespace-nowrap">OK (&gt;60%)</div>
-                <div className="text-muted-foreground hidden sm:block">Pequeño/Gris</div>
               </div>
             </div>
             
             <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded border border-warning sm:border-2 bg-warning/70 shadow-lg flex-shrink-0" />
+              <div className="w-3 h-3 sm:w-3 sm:h-3 rounded border border-warning sm:border-2 bg-warning/70 shadow-lg flex-shrink-0" />
               <div className="text-[10px] sm:text-xs">
                 <div className="font-bold text-foreground whitespace-nowrap">Atención (20-60%)</div>
-                <div className="text-muted-foreground hidden sm:block">Mediano/Amarillo</div>
               </div>
             </div>
             
             <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded border border-danger sm:border-2 bg-danger/80 shadow-xl flex-shrink-0" />
+              <div className="w-3 h-3 sm:w-3 sm:h-3 rounded border border-danger sm:border-2 bg-danger/80 shadow-xl flex-shrink-0" />
               <div className="text-[10px] sm:text-xs">
                 <div className="font-bold text-foreground whitespace-nowrap">Crítico (&lt;20%)</div>
-                <div className="text-muted-foreground hidden sm:block">Grande/Rojo</div>
               </div>
             </div>
           </div>

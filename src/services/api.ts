@@ -18,6 +18,8 @@ export async function api<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<ApiResponse<T>> {
+
+  
   try {
     const sessionToken = getSessionCookie();
     

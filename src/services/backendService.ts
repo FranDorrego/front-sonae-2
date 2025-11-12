@@ -66,6 +66,11 @@ export async function getLojas(): Promise<ApiResponse<LojasResponse>> {
 
 // Obtener status de productos de una loja
 export async function getStatus(idLoja: number): Promise<ApiResponse<StatusResponse>> {
+  return {
+      sucesso: false,
+      erro: "Error al conectar con el backend",
+    };
+  
   try {
     const response = await fetch(`${BACKEND_URL}/status/${idLoja}`);
     if (!response.ok) throw new Error("Error al cargar status");
