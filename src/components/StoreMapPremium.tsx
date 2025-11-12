@@ -209,7 +209,7 @@ export default function StoreMapPremium({
             </div>
             
             <div className="flex items-center gap-2">
-              <div className="w-16 h-16 rounded border-2 border-warning bg-warning/70 shadow-lg" />
+              <div className="w-8 h-8 rounded border-2 border-warning bg-warning/70 shadow-lg" />
               <div className="text-xs">
                 <div className="font-bold text-foreground">Atención (20-60%)</div>
                 <div className="text-muted-foreground">Mediano/Amarillo</div>
@@ -217,7 +217,7 @@ export default function StoreMapPremium({
             </div>
             
             <div className="flex items-center gap-2">
-              <div className="w-24 h-24 rounded border-2 border-danger bg-danger/80 shadow-xl" />
+              <div className="w-8 h-8 rounded border-2 border-danger bg-danger/80 shadow-xl" />
               <div className="text-xs">
                 <div className="font-bold text-foreground">Crítico (&lt;20%)</div>
                 <div className="text-muted-foreground">Grande/Rojo</div>
