@@ -3,10 +3,9 @@ import { MapPin, Lightbulb, BarChart3 } from "lucide-react";
 import logo from "@/assets/sonae-logo.png";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Badge } from "./ui/badge";
-import { Loja } from "@/services/backendService";
 
 interface TopNavProps {
-  stores?: Loja[];
+  stores?: { value: string; label: string }[];
   selectedStore?: string;
   onStoreChange?: (value: string) => void;
   showMockBadge?: boolean;
@@ -108,12 +107,12 @@ export default function TopNav({ stores, selectedStore, onStoreChange, showMockB
           {stores && stores.length > 0 && onStoreChange && (
             <Select value={selectedStore} onValueChange={onStoreChange}>
               <SelectTrigger className="w-[100px] sm:w-[140px] h-8 text-xs sm:text-sm">
-                <SelectValue placeholder="Loja" />
+                <SelectValue placeholder="Selecione" />
               </SelectTrigger>
               <SelectContent>
                 {stores.map((store) => (
-                  <SelectItem key={store.id} value={store.id.toString()}>
-                    {store.nombre}
+                  <SelectItem key={store.value} value={store.value}>
+                    {store.label}
                   </SelectItem>
                 ))}
               </SelectContent>

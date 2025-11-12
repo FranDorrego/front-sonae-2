@@ -114,7 +114,7 @@ export default function Estatisticas() {
 
   return (
     <Layout
-      stores={lojas}
+      stores={lojas.map(l => ({ value: l.id.toString(), label: l.nombre }))}
       selectedStore={lojaSeleccionada?.toString()}
       onStoreChange={handleLojaChange}
       showMockBadge={usandoMock}

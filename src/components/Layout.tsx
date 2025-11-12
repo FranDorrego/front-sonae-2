@@ -1,10 +1,9 @@
 import { ReactNode } from "react";
 import TopNav from "./TopNav";
-import { Loja } from "@/services/backendService";
 
 interface LayoutProps {
   children: ReactNode;
-  stores?: Loja[];
+  stores?: { value: string; label: string }[];
   selectedStore?: string;
   onStoreChange?: (value: string) => void;
   showMockBadge?: boolean;

@@ -65,7 +65,7 @@ export default function Conselhos() {
 
   return (
     <Layout
-      stores={lojas}
+      stores={lojas.map(l => ({ value: l.id.toString(), label: l.nombre }))}
       selectedStore={lojaSeleccionada}
       onStoreChange={setLojaSeleccionada}
       showMockBadge={true}
