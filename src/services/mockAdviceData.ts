@@ -122,13 +122,17 @@ export async function get_data_conselhos(): Promise<ApiResponse<Conselho[]>> {
 
 export async function post_resposta_conselho(
   conselhoId: string,
-  aceito: boolean
+  aceito: boolean,
+  motivo?: string
 ): Promise<ApiResponse<void>> {
+  if (!aceito && motivo) {
+    console.log(`Feedback de rejeição: ${motivo}`);
+  }
   return { sucesso: true };
   try {
     const response = await api<void>(`/conselhos/${conselhoId}`, {
       method: "POST",
-      body: JSON.stringify({ aceito }),
+      body: JSON.stringify({ aceito, motivo }),
     });
 
     if (response.sucesso) {

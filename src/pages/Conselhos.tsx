@@ -4,7 +4,9 @@ import Layout from "@/components/Layout";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
 import ConselhoCard from "@/components/ConselhoCard";
+import AjudaConselhoChat from "@/components/AjudaConselhoChat";
 import { get_data_conselhos, post_resposta_conselho } from "@/services/mockAdviceData";
+import { getLojas } from "@/services/backendService";
 import { toast } from "sonner";
 
 export default function Conselhos() {
@@ -12,10 +14,23 @@ export default function Conselhos() {
   const [isLoading, setIsLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [lojas, setLojas] = useState<any[]>([]);
+  const [lojaSeleccionada, setLojaSeleccionada] = useState<string>("");
 
   useEffect(() => {
+    carregarLojas();
     carregarDados();
   }, []);
+
+  const carregarLojas = async () => {
+    const response = await getLojas();
+    if (response.sucesso && response.dados) {
+      setLojas(response.dados.lojas);
+      if (response.dados.lojas.length > 0) {
+        setLojaSeleccionada(response.dados.lojas[0].id.toString());
+      }
+    }
+  };
 
   const carregarDados = async () => {
     setIsLoading(true);
@@ -31,12 +46,15 @@ export default function Conselhos() {
     setIsLoading(false);
   };
 
-  const handleResposta = async (conselhoId: string, aceito: boolean) => {
+  const handleResposta = async (conselhoId: string, aceito: boolean, motivo?: string) => {
     setLoadingId(conselhoId);
-    const response = await post_resposta_conselho(conselhoId, aceito);
+    const response = await post_resposta_conselho(conselhoId, aceito, motivo);
     
     if (response.sucesso) {
       toast.success(aceito ? "Conselho aceite" : "Conselho rejeitado");
+      if (!aceito && motivo) {
+        console.log(`Motivo de rejeição (${conselhoId}):`, motivo);
+      }
       setConselhos(conselhos.filter((c) => c.id !== conselhoId));
     } else {
       toast.error(response.erro || "Erro ao processar");
@@ -46,11 +64,19 @@ export default function Conselhos() {
   };
 
   return (
-    <Layout>
+    <Layout
+      stores={lojas}
+      selectedStore={lojaSeleccionada}
+      onStoreChange={setLojaSeleccionada}
+      showMockBadge={true}
+    >
       <div className="container mx-auto p-4 md:p-8 max-w-4xl">
-        <h1 className="text-3xl font-bold text-foreground mb-2">
-          Conselhos IA
-        </h1>
+        <div className="flex items-center justify-between mb-2">
+          <h1 className="text-3xl font-bold text-foreground">
+            Conselhos IA
+          </h1>
+          <AjudaConselhoChat />
+        </div>
         <p className="text-muted-foreground mb-6">
           Sugestões inteligentes baseadas em dados históricos
         </p>
@@ -70,7 +96,7 @@ export default function Conselhos() {
                 key={conselho.id}
                 conselho={conselho}
                 onAceitar={() => handleResposta(conselho.id, true)}
-                onRejeitar={() => handleResposta(conselho.id, false)}
+                onRejeitar={(motivo) => handleResposta(conselho.id, false, motivo)}
                 isLoading={loadingId === conselho.id}
               />
             ))}
