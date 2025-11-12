@@ -42,6 +42,11 @@ export interface Estatistica {
   eficiencia: number;
 }
 
+export interface Zona {
+  zona: string;
+  camara_id: number;
+}
+
 export interface ApiResponse<T> {
   sucesso: boolean;
   dados?: T;

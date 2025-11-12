@@ -1,16 +1,23 @@
-import { Produto } from "@/types";
+import { Produto, Zona } from "@/types";
 import { cn } from "@/lib/utils";
 import { AlertCircle } from "lucide-react";
 
 interface StoreMapPremiumProps {
   produtos: Produto[];
+  zonas: Zona[];
   onProductClick: (produto: Produto) => void;
 }
 
 export default function StoreMapPremium({
   produtos,
+  zonas,
   onProductClick,
 }: StoreMapPremiumProps) {
+  // Agrupar productos por zona
+  const productosPorZona = zonas.reduce((acc, zona) => {
+    acc[zona.zona] = produtos.filter(p => p.localizacao.zona === zona.zona);
+    return acc;
+  }, {} as Record<string, Produto[]>);
   const getStatusColor = (status: Produto["status"]) => {
     switch (status) {
       case "ok":
@@ -40,17 +47,8 @@ export default function StoreMapPremium({
     return null;
   };
 
-  const getProdutoByPos = (x: number, y: number) => {
-    return produtos.find(
-      (p) => p.localizacao.posicao.x === x && p.localizacao.posicao.y === y
-    );
-  };
-
-  const renderProductBox = (x: number, y: number, forceSize?: "small") => {
-    const produto = getProdutoByPos(x, y);
-    if (!produto) return <div className="w-full h-full bg-muted/20 rounded border border-dashed border-border/30" />;
-
-    const boxSize = forceSize === "small" ? "h-12 sm:h-16 lg:h-20" : getBoxSize(produto.status);
+  const renderSingleProduct = (produto: Produto) => {
+    const boxSize = getBoxSize(produto.status);
     const isOk = produto.status === "ok";
 
     return (
@@ -118,89 +116,33 @@ export default function StoreMapPremium({
             </div>
           </div>
 
-          {/* Layout simplificado */}
+          {/* Layout dinámico por zonas */}
           <div className="flex flex-col gap-4 sm:gap-6 lg:gap-10">
-            
-            {/* Corredor Superior - Cítricos */}
-            <div>
-              <div className="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-3 lg:mb-4">
-                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/30 to-primary/30" />
-                <span className="text-[10px] sm:text-xs lg:text-sm font-bold text-primary px-2 sm:px-3 lg:px-4 py-1 sm:py-1 lg:py-1.5 bg-primary/10 rounded-full shadow-sm whitespace-nowrap">
-                  Pasillo Cítricos
-                </span>
-                <div className="h-px flex-1 bg-gradient-to-r from-primary/30 via-primary/30 to-transparent" />
-              </div>
-              <div className="grid grid-cols-4 gap-2 sm:gap-3 lg:gap-5">
-                {[1, 2, 3, 4].map((x) => (
-                  <div key={`a1-${x}`}>{renderProductBox(x, 1)}</div>
-                ))}
-              </div>
-            </div>
-
-            {/* Área Central con 3 corredores */}
-            <div className="grid grid-cols-4 gap-3 sm:gap-5 lg:gap-8">
+            {zonas.map((zona, index) => {
+              const productosZona = productosPorZona[zona.zona] || [];
+              const numProductos = productosZona.length;
+              const cols = Math.min(Math.max(Math.ceil(Math.sqrt(numProductos)), 3), 5);
               
-              {/* Corredor Izquierdo - Tropicales */}
-              <div className="flex flex-col">
-                <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-primary text-center mb-2 sm:mb-3 lg:mb-4 bg-primary/10 rounded-md lg:rounded-lg px-2 sm:px-2.5 lg:px-3 py-1 sm:py-1.5 lg:py-2 shadow-sm">
-                  Tropicales
-                </div>
-                <div className="flex flex-col gap-2 sm:gap-3 lg:gap-4">
-                  {[2, 3, 4].map((y) => (
-                    <div key={`b1-${y}`}>{renderProductBox(1, y, "small")}</div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Isla Central - 2 filas de productos */}
-              <div className="col-span-2 flex flex-col gap-2 sm:gap-3 lg:gap-5">
-                <div className="bg-muted/20 rounded-lg lg:rounded-xl p-2 sm:p-3 lg:p-5 border border-border/40 shadow-sm">
-                  <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-center text-secondary mb-2 sm:mb-3 lg:mb-4">Isla Central - Frutas</div>
-                  <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
-                    {[2, 3, 4].map((x) => (
-                      <div key={`c1-${x}-3`}>{renderProductBox(x, 3)}</div>
+              return (
+                <div key={zona.camara_id}>
+                  <div className="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-3 lg:mb-4">
+                    <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/30 to-primary/30" />
+                    <span className="text-[10px] sm:text-xs lg:text-sm font-bold text-primary px-2 sm:px-3 lg:px-4 py-1 sm:py-1 lg:py-1.5 bg-primary/10 rounded-full shadow-sm whitespace-nowrap">
+                      {zona.zona}
+                    </span>
+                    <div className="h-px flex-1 bg-gradient-to-r from-primary/30 via-primary/30 to-transparent" />
+                  </div>
+                  <div 
+                    className="grid gap-2 sm:gap-3 lg:gap-5"
+                    style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+                  >
+                    {productosZona.map((producto) => (
+                      <div key={producto.id}>{renderSingleProduct(producto)}</div>
                     ))}
                   </div>
                 </div>
-
-                <div className="bg-muted/20 rounded-lg lg:rounded-xl p-2 sm:p-3 lg:p-5 border border-border/40 shadow-sm">
-                  <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-center text-secondary mb-2 sm:mb-3 lg:mb-4">Melões & Frutas</div>
-                  <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
-                    {[2, 3, 4].map((x) => (
-                      <div key={`c2-${x}-4`}>{renderProductBox(x, 4)}</div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Corredor Derecho - Verduras */}
-              <div className="flex flex-col">
-                <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-primary text-center mb-2 sm:mb-3 lg:mb-4 bg-primary/10 rounded-md lg:rounded-lg px-2 sm:px-2.5 lg:px-3 py-1 sm:py-1.5 lg:py-2 shadow-sm">
-                  Verduras
-                </div>
-                <div className="flex flex-col gap-2 sm:gap-3 lg:gap-4">
-                  {[2, 3, 4].map((y) => (
-                    <div key={`b2-${y}`}>{renderProductBox(4, y, "small")}</div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Corredor Inferior - Folhosas */}
-            <div>
-              <div className="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-3 lg:mb-4">
-                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/30 to-primary/30" />
-                <span className="text-[10px] sm:text-xs lg:text-sm font-bold text-primary px-2 sm:px-3 lg:px-4 py-1 sm:py-1 lg:py-1.5 bg-primary/10 rounded-full shadow-sm whitespace-nowrap">
-                  Pasillo Folhosas
-                </span>
-                <div className="h-px flex-1 bg-gradient-to-r from-primary/30 via-primary/30 to-transparent" />
-              </div>
-              <div className="grid grid-cols-4 gap-2 sm:gap-3 lg:gap-5">
-                {[1, 2, 3, 4].map((x) => (
-                  <div key={`d1-${x}`}>{renderProductBox(x, 5)}</div>
-                ))}
-              </div>
-            </div>
+              );
+            })}
           </div>
 
           {/* CAIXAS - Parte inferior */}

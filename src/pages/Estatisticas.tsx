@@ -5,23 +5,80 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
 import { ArrowUpDown } from "lucide-react";
 import { get_data_estatisticas } from "@/services/mockStatisticsData";
+import { getLojas, getEstadisticas, Loja } from "@/services/backendService";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 
 type OrdenacaoCampo = "percentualVendas" | "percentualEspaco" | "eficiencia";
 
 export default function Estatisticas() {
   const [estatisticas, setEstatisticas] = useState<Estatistica[]>([]);
+  const [lojas, setLojas] = useState<Loja[]>([]);
+  const [lojaSeleccionada, setLojaSeleccionada] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
+  const [usandoMock, setUsandoMock] = useState(false);
   const [ordenacao, setOrdenacao] = useState<{
     campo: OrdenacaoCampo;
     desc: boolean;
   }>({ campo: "percentualVendas", desc: true });
 
   useEffect(() => {
-    carregarDados();
+    carregarLojas();
   }, []);
 
-  const carregarDados = async () => {
+  useEffect(() => {
+    if (lojaSeleccionada !== null) {
+      carregarDatos();
+    }
+  }, [lojaSeleccionada]);
+
+  const carregarLojas = async () => {
+    const response = await getLojas();
+    
+    if (response.sucesso && response.dados) {
+      setLojas(response.dados.lojas);
+      if (response.dados.lojas.length > 0) {
+        setLojaSeleccionada(response.dados.lojas[0].id);
+      }
+      setUsandoMock(false);
+    } else {
+      // Fallback a datos mock
+      setUsandoMock(true);
+      carregarDadosMock();
+    }
+  };
+
+  const carregarDatos = async () => {
+    if (lojaSeleccionada === null) return;
+    
+    setIsLoading(true);
+    const response = await getEstadisticas(lojaSeleccionada);
+    
+    if (response.sucesso && response.dados) {
+      // Convertir datos del backend a formato Estatistica
+      const estatisticasConvertidas: Estatistica[] = response.dados.estadisticas.map((e) => ({
+        id: `${e.id_producto}`,
+        nomeProduto: e.nombre,
+        categoria: "General",
+        percentualVendas: e["rotacion_%"],
+        percentualEspaco: e["uso_espacio_%"],
+        eficiencia: e["eficacia_%"] / 100, // Convertir a decimal
+      }));
+      
+      setEstatisticas(estatisticasConvertidas);
+      setErro(null);
+      setUsandoMock(false);
+    } else {
+      // Fallback a datos mock
+      setUsandoMock(true);
+      carregarDadosMock();
+    }
+    
+    setIsLoading(false);
+  };
+
+  const carregarDadosMock = async () => {
     setIsLoading(true);
     const response = await get_data_estatisticas();
     
@@ -33,6 +90,10 @@ export default function Estatisticas() {
     }
     
     setIsLoading(false);
+  };
+
+  const handleLojaChange = (value: string) => {
+    setLojaSeleccionada(parseInt(value));
   };
 
   const ordenar = (campo: OrdenacaoCampo) => {
@@ -54,9 +115,34 @@ export default function Estatisticas() {
         <h1 className="text-3xl font-bold text-foreground mb-2">
           Estatísticas
         </h1>
-        <p className="text-muted-foreground mb-6">
+        <p className="text-muted-foreground mb-4">
           Análise de vendas e ocupação de espaço
         </p>
+
+        {/* Selector de Loja */}
+        <div className="mb-6 flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-medium text-foreground">Loja:</label>
+            <Select value={lojaSeleccionada?.toString()} onValueChange={handleLojaChange}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Seleccionar loja" />
+              </SelectTrigger>
+              <SelectContent>
+                {lojas.map((loja) => (
+                  <SelectItem key={loja.id} value={loja.id.toString()}>
+                    {loja.nombre}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          {usandoMock && (
+            <Badge variant="outline" className="text-xs text-muted-foreground border-muted-foreground/30">
+              Mock Data
+            </Badge>
+          )}
+        </div>
 
         {erro && <ErrorMessage message={erro} />}
 
