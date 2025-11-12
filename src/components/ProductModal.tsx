@@ -42,6 +42,7 @@ export default function ProductModal({ produto, isOpen, onClose }: ProductModalP
       case "ok": return "Normal";
       case "baixo": return "Atenção necessária";
       case "critico": return "Crítico";
+      case "desconhecido": return "Desconhecido";
     }
   };
 
@@ -74,6 +75,8 @@ export default function ProductModal({ produto, isOpen, onClose }: ProductModalP
                       ? "bg-success"
                       : produto.status === "baixo"
                       ? "bg-warning"
+                      : produto.status === "desconhecido"
+                      ? "bg-unknown"
                       : "bg-danger"
                   }`}
                   style={{ width: `${produto.percentual}%` }}

@@ -23,7 +23,7 @@ const MOCK_PRODUTOS: Produto[] = [
 
   // Corredor Lateral Direito - Verduras (3 posições)
   { id: "p51", nome: "Tomate", categoria: "Verduras", quantidadeAtual: 87, quantidadeMaxima: 100, percentual: 87, status: "ok", localizacao: { zona: "B2", posicao: { x: 4, y: 2 } } },
-  { id: "p52", nome: "Pepino", categoria: "Verduras", quantidadeAtual: 12, quantidadeMaxima: 100, percentual: 12, status: "critico", localizacao: { zona: "B2", posicao: { x: 4, y: 3 } } },
+  { id: "p52", nome: "Produto Desconhecido", categoria: "Frutas", quantidadeAtual: 0, quantidadeMaxima: 100, percentual: 0, status: "desconhecido", localizacao: { zona: "B2", posicao: { x: 4, y: 3 } } },
   { id: "p53", nome: "Pimento", categoria: "Verduras", quantidadeAtual: 44, quantidadeMaxima: 100, percentual: 44, status: "baixo", localizacao: { zona: "B2", posicao: { x: 4, y: 4 } } },
 
   // Corredor Inferior - Folhosas (4 posições)

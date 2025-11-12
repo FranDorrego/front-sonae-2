@@ -5,6 +5,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
 import StoreMapPremium from "@/components/StoreMapPremium";
 import ProductModal from "@/components/ProductModal";
+import ProductIdentificationModal from "@/components/ProductIdentificationModal";
 import { getLojas, getStatus, Loja } from "@/services/backendService";
 import { get_data_stock } from "@/services/mockStockData";
 import { Badge } from "@/components/ui/badge";
@@ -168,13 +169,19 @@ export default function Status() {
           />
         )}
 
-        {selectedProduct && (
+        {selectedProduct && selectedProduct.status === "desconhecido" ? (
+          <ProductIdentificationModal
+            produto={selectedProduct}
+            isOpen={!!selectedProduct}
+            onClose={() => setSelectedProduct(null)}
+          />
+        ) : selectedProduct ? (
           <ProductModal
             produto={selectedProduct}
             isOpen={!!selectedProduct}
             onClose={() => setSelectedProduct(null)}
           />
-        )}
+        ) : null}
       </div>
     </Layout>
   );

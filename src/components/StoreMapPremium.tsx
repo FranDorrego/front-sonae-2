@@ -27,6 +27,8 @@ export default function StoreMapPremium({
         return "bg-warning/70 border-warning shadow-lg ring-1 ring-warning/40";
       case "critico":
         return "bg-danger/80 border-danger shadow-xl ring-2 ring-danger/50 animate-pulse";
+      case "desconhecido":
+        return "bg-unknown/70 border-unknown shadow-lg ring-2 ring-unknown/50";
     }
   };
 
@@ -49,6 +51,8 @@ export default function StoreMapPremium({
         return 4; // Ocupa más espacio
       case "baixo":
         return 2; // Espacio mediano
+      case "desconhecido":
+        return 3; // Espacio alto para llamar atención
       case "ok":
         return 1; // Espacio mínimo
     }
@@ -75,6 +79,13 @@ export default function StoreMapPremium({
           <span className="text-[7px] sm:text-[8px] font-medium text-muted-foreground text-center px-0.5 sm:px-1 line-clamp-2">
             {produto.nome}
           </span>
+        ) : produto.status === "desconhecido" ? (
+          <div className="flex flex-col items-center justify-center p-1 sm:p-2 w-full">
+            <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-foreground mb-1" />
+            <span className="text-[8px] sm:text-[10px] font-bold text-foreground text-center line-clamp-2">
+              Produto<br />Desconhecido
+            </span>
+          </div>
         ) : (
           <div className="flex flex-col items-center justify-center p-1 sm:p-2 w-full">
             <span className={cn(
@@ -234,6 +245,13 @@ export default function StoreMapPremium({
               <div className="w-3 h-3 sm:w-3 sm:h-3 rounded border border-danger sm:border-2 bg-danger/80 shadow-xl flex-shrink-0" />
               <div className="text-[10px] sm:text-xs">
                 <div className="font-bold text-foreground whitespace-nowrap">Crítico (&lt;20%)</div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-3 h-3 sm:w-3 sm:h-3 rounded border border-unknown sm:border-2 bg-unknown/70 shadow-lg flex-shrink-0" />
+              <div className="text-[10px] sm:text-xs">
+                <div className="font-bold text-foreground whitespace-nowrap">Desconhecido</div>
               </div>
             </div>
           </div>
