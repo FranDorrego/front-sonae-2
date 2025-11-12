@@ -19,232 +19,208 @@ export default function StoreMapPremium({
     return acc;
   }, {} as Record<string, Produto[]>);
 
-  // Función para determinar la posición de cada zona en el layout
-  const getZonaLayout = (index: number, total: number) => {
-    // Distribución: arriba, izquierda, centro, derecha, abajo
-    if (index === 0) return { position: 'top', label: '↓' };
-    if (index === total - 1) return { position: 'bottom', label: '↑' };
-    if (index === 1) return { position: 'left', label: '→' };
-    if (index === total - 2 && total > 3) return { position: 'right', label: '←' };
-    return { position: 'center', label: '' };
-  };
   const getStatusColor = (status: Produto["status"]) => {
     switch (status) {
       case "ok":
-        return "bg-muted/60 border-muted-foreground/20";
+        return "bg-muted/40 border-muted-foreground/10";
       case "baixo":
-        return "bg-gradient-to-br from-warning/50 to-warning/30 border-warning shadow-[0_0_20px_rgba(251,191,36,0.4)] ring-2 ring-warning/30";
+        return "bg-warning/70 border-warning shadow-lg ring-1 ring-warning/40";
       case "critico":
-        return "bg-gradient-to-br from-danger/60 to-danger/40 border-danger shadow-[0_0_25px_rgba(239,68,68,0.6)] ring-2 ring-danger/50 animate-pulse";
+        return "bg-danger/80 border-danger shadow-xl ring-2 ring-danger/50 animate-pulse";
     }
   };
 
-  const getBoxSize = (status: Produto["status"]) => {
+  // Tamaño basado en criticidad: OK pequeño, Warning mediano, Critical grande
+  const getProductSize = (status: Produto["status"]) => {
     switch (status) {
       case "ok":
-        return "h-16 sm:h-20 lg:h-24"; // Responsive para productos OK
+        return "w-8 h-8"; // Muy pequeño y discreto
       case "baixo":
-        return "h-20 sm:h-24 lg:h-28"; // Responsive para productos con atención
+        return "w-16 h-16"; // Mediano, llama atención
       case "critico":
-        return "h-24 sm:h-28 lg:h-32"; // Responsive para productos críticos
+        return "w-24 h-24"; // Grande, muy visible
     }
   };
 
-  const getStatusIcon = (status: Produto["status"]) => {
-    if (status === "critico") {
-      return <AlertCircle className="w-4 h-4 text-danger-foreground" />;
-    }
-    return null;
-  };
-
-  const renderZonaEstante = (zona: Zona, index: number, layout: { position: string; label: string }) => {
-    const productosZona = productosPorZona[zona.zona] || [];
-    const isVertical = layout.position === 'left' || layout.position === 'right';
-    
-    return (
-      <div className={cn(
-        "bg-muted/20 rounded-lg lg:rounded-xl p-2 sm:p-3 lg:p-4 border border-border/40 shadow-sm",
-        layout.position === 'center' && "col-span-2"
-      )}>
-        <div className="flex items-center gap-2 mb-2 sm:mb-3">
-          {layout.label && (
-            <span className="text-[10px] sm:text-xs lg:text-sm font-bold text-primary">{layout.label}</span>
-          )}
-          <span className="text-[10px] sm:text-xs lg:text-sm font-bold text-secondary">
-            {zona.zona}
-          </span>
-        </div>
-        <div 
-          className={cn(
-            "grid gap-2 sm:gap-3 lg:gap-4",
-            isVertical ? "grid-cols-1" : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"
-          )}
-        >
-          {productosZona.map((producto) => (
-            <div key={producto.id}>{renderSingleProduct(producto)}</div>
-          ))}
-          {productosZona.length === 0 && (
-            <div className="col-span-full text-center text-muted-foreground text-xs py-4">
-              Sin productos
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const renderSingleProduct = (produto: Produto) => {
-    const boxSize = getBoxSize(produto.status);
+  // Renderizar un producto individual
+  const renderProducto = (produto: Produto) => {
+    const size = getProductSize(produto.status);
     const isOk = produto.status === "ok";
 
     return (
       <button
+        key={produto.id}
         onClick={() => onProductClick(produto)}
         className={cn(
-          "w-full relative rounded-md lg:rounded-lg border transition-all hover:scale-105 hover:z-10 p-1 sm:p-1.5 lg:p-2 flex flex-col justify-between",
-          boxSize,
+          "relative rounded border-2 transition-all hover:scale-110 hover:z-20 flex items-center justify-center",
+          size,
           getStatusColor(produto.status),
-          isOk ? "shadow-sm" : "shadow-md lg:shadow-lg border-2"
+          "flex-shrink-0"
         )}
+        title={`${produto.nome} - ${produto.percentual}%`}
       >
-        {!isOk && (
-          <div className="flex items-start justify-between gap-0.5 sm:gap-1">
-            <div className="text-[7px] sm:text-[8px] lg:text-[9px] font-bold text-foreground/90 bg-background/80 px-1 sm:px-1.5 py-0.5 rounded">
-              {produto.localizacao.zona}
-            </div>
-            {getStatusIcon(produto.status)}
-          </div>
-        )}
-        
-        <div className={cn("flex-1 flex items-center justify-center", isOk && "py-0.5 sm:py-1")}>
-          <div className={cn(
-            "font-bold leading-tight text-center line-clamp-2",
-            isOk ? "text-[8px] sm:text-[9px] lg:text-[10px] text-muted-foreground" : "text-[9px] sm:text-[10px] lg:text-xs text-foreground"
-          )}>
+        {isOk ? (
+          <span className="text-[6px] font-medium text-muted-foreground text-center px-0.5 line-clamp-2">
             {produto.nome}
-          </div>
-        </div>
-        
-        {!isOk && (
-          <div className="flex items-center justify-between">
-            <div className="text-[8px] sm:text-[9px] lg:text-[10px] font-extrabold text-foreground/90 bg-background/80 px-1 sm:px-1.5 py-0.5 rounded">
+          </span>
+        ) : (
+          <div className="flex flex-col items-center justify-center p-1 w-full">
+            <span className="text-[8px] font-bold text-foreground text-center line-clamp-2 mb-0.5">
+              {produto.nome}
+            </span>
+            <span className="text-[10px] font-extrabold text-foreground">
               {produto.percentual}%
-            </div>
-            <div className={cn(
-              "w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full",
-              produto.status === "baixo" ? "bg-warning" : "bg-danger"
-            )} />
+            </span>
+            {produto.status === "critico" && (
+              <AlertCircle className="w-3 h-3 text-danger-foreground mt-0.5" />
+            )}
           </div>
         )}
       </button>
     );
   };
 
+  // Renderizar una zona como estantería
+  const renderZona = (zona: Zona, orientation: "horizontal" | "vertical") => {
+    const productosZona = productosPorZona[zona.zona] || [];
+    
+    return (
+      <div className={cn(
+        "bg-muted/10 rounded-lg p-3 border-2 border-border/30 relative",
+        orientation === "vertical" ? "min-h-[400px]" : "min-h-[120px]"
+      )}>
+        {/* Etiqueta de zona */}
+        <div className="absolute -top-3 left-3 bg-background px-2 py-0.5 rounded border border-border shadow-sm z-10">
+          <span className="text-xs font-bold text-foreground">{zona.zona}</span>
+        </div>
+        
+        {/* Productos en la zona */}
+        <div className={cn(
+          "flex gap-2 flex-wrap p-2",
+          orientation === "vertical" ? "flex-col items-start" : "flex-row items-center justify-start"
+        )}>
+          {productosZona.map((produto) => renderProducto(produto))}
+          {productosZona.length === 0 && (
+            <span className="text-xs text-muted-foreground">Sin productos</span>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // Distribuir zonas según el layout del dibujo
+  const getZonaPosition = (index: number): "left-top" | "left-bottom" | "center" | "right-top" | "right-bottom" => {
+    const total = zonas.length;
+    
+    if (total <= 3) {
+      if (index === 0) return "left-top";
+      if (index === 1) return "center";
+      return "right-top";
+    }
+    
+    // Para 4-5 zonas: distribuir left-top, left-bottom, center, right-top, right-bottom
+    if (index === 0) return "left-top";
+    if (index === 1) return "left-bottom";
+    if (index === Math.floor(total / 2)) return "center";
+    if (index === total - 2) return "right-top";
+    return "right-bottom";
+  };
+
   return (
-    <div className="w-full flex items-center justify-center p-2 sm:p-4 lg:p-6">
-      <div className="w-full max-w-7xl bg-gradient-to-br from-background via-muted/20 to-background rounded-xl lg:rounded-2xl p-3 sm:p-5 lg:p-8 shadow-xl lg:shadow-2xl border border-border/50 flex flex-col">
-        <div className="text-center mb-3 sm:mb-4 lg:mb-6">
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-1 sm:mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            Mapa de Stock en Tiempo Real
+    <div className="w-full h-[calc(100vh-120px)] flex items-center justify-center p-2">
+      <div className="w-full h-full max-w-[1600px] bg-gradient-to-br from-background via-muted/10 to-background rounded-xl shadow-2xl border border-border/50 flex flex-col overflow-hidden">
+        
+        {/* Header */}
+        <div className="text-center py-3 border-b border-border/30 bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5">
+          <h2 className="text-xl font-bold text-foreground mb-1">
+            Mapa de Loja - Vista Superior
           </h2>
-          <p className="text-xs sm:text-sm text-muted-foreground">
-            Control visual del inventario • Click para ver detalles
+          <p className="text-xs text-muted-foreground">
+            Tamaño según criticidad • Click para detalles
           </p>
         </div>
 
-        {/* Grid principal do supermercado */}
-        <div className="relative bg-gradient-to-br from-muted/10 to-background/50 rounded-lg lg:rounded-xl p-3 sm:p-5 lg:p-8 border border-border/30">
-          
-          {/* ENTRADA - Parte superior */}
-          <div className="mb-3 sm:mb-4 lg:mb-6 text-center">
-            <div className="inline-block bg-primary/10 border border-primary/30 rounded-md lg:rounded-lg px-3 sm:px-4 lg:px-6 py-1 sm:py-1.5 lg:py-2">
-              <span className="text-[10px] sm:text-xs lg:text-sm font-bold text-primary">↓ ENTRADA ↓</span>
-            </div>
-          </div>
-
-          {/* Layout de supermercado con zonas posicionadas */}
-          <div className="flex flex-col gap-3 sm:gap-5 lg:gap-8">
+        {/* Mapa Principal */}
+        <div className="flex-1 relative bg-background/50 overflow-auto">
+          <div className="h-full p-4">
             
-            {/* Zona Superior (si existe) */}
-            {zonas.length > 0 && getZonaLayout(0, zonas.length).position === 'top' && (
-              <div>
-                {renderZonaEstante(zonas[0], 0, getZonaLayout(0, zonas.length))}
+            {/* ENTRADA */}
+            <div className="text-center mb-4">
+              <div className="inline-block bg-primary/10 border-2 border-primary/30 rounded-lg px-6 py-2">
+                <span className="text-sm font-bold text-primary">↓ ENTRADA ↓</span>
               </div>
-            )}
+            </div>
 
-            {/* Área central con estantes laterales y centrales */}
-            <div className="grid grid-cols-4 gap-3 sm:gap-5 lg:gap-8">
+            {/* Layout del supermercado */}
+            <div className="grid grid-cols-12 gap-4 h-[calc(100%-100px)]">
               
-              {/* Estante Izquierdo */}
-              {zonas.length > 1 && getZonaLayout(1, zonas.length).position === 'left' && (
-                <div>
-                  {renderZonaEstante(zonas[1], 1, getZonaLayout(1, zonas.length))}
-                </div>
-              )}
-
-              {/* Estantes Centrales */}
-              <div className="col-span-2 flex flex-col gap-3 sm:gap-5">
+              {/* COLUMNA IZQUIERDA (Zonas verticales) */}
+              <div className="col-span-2 flex flex-col gap-4">
                 {zonas.map((zona, index) => {
-                  const layout = getZonaLayout(index, zonas.length);
-                  if (layout.position === 'center') {
-                    return (
-                      <div key={zona.camara_id}>
-                        {renderZonaEstante(zona, index, layout)}
-                      </div>
-                    );
+                  const pos = getZonaPosition(index);
+                  if (pos === "left-top" || pos === "left-bottom") {
+                    return <div key={zona.camara_id}>{renderZona(zona, "vertical")}</div>;
                   }
                   return null;
                 })}
               </div>
 
-              {/* Estante Derecho */}
-              {zonas.length > 3 && getZonaLayout(zonas.length - 2, zonas.length).position === 'right' && (
-                <div>
-                  {renderZonaEstante(zonas[zonas.length - 2], zonas.length - 2, getZonaLayout(zonas.length - 2, zonas.length))}
-                </div>
-              )}
+              {/* COLUMNA CENTRAL (Zonas horizontales) */}
+              <div className="col-span-8 flex flex-col justify-center gap-6 px-4">
+                {zonas.map((zona, index) => {
+                  const pos = getZonaPosition(index);
+                  if (pos === "center") {
+                    return <div key={zona.camara_id}>{renderZona(zona, "horizontal")}</div>;
+                  }
+                  return null;
+                })}
+              </div>
+
+              {/* COLUMNA DERECHA (Zonas verticales) */}
+              <div className="col-span-2 flex flex-col gap-4">
+                {zonas.map((zona, index) => {
+                  const pos = getZonaPosition(index);
+                  if (pos === "right-top" || pos === "right-bottom") {
+                    return <div key={zona.camara_id}>{renderZona(zona, "vertical")}</div>;
+                  }
+                  return null;
+                })}
+              </div>
             </div>
 
-            {/* Zona Inferior (si existe) */}
-            {zonas.length > 2 && getZonaLayout(zonas.length - 1, zonas.length).position === 'bottom' && (
-              <div>
-                {renderZonaEstante(zonas[zonas.length - 1], zonas.length - 1, getZonaLayout(zonas.length - 1, zonas.length))}
+            {/* CAIXAS */}
+            <div className="text-center mt-4">
+              <div className="inline-block bg-primary/10 border-2 border-primary/30 rounded-lg px-6 py-2">
+                <span className="text-sm font-bold text-primary">→ CAIXAS →</span>
               </div>
-            )}
-          </div>
-
-          {/* CAIXAS - Parte inferior */}
-          <div className="mt-3 sm:mt-4 lg:mt-6 text-center">
-            <div className="inline-block bg-primary/10 border border-primary/30 rounded-md lg:rounded-lg px-3 sm:px-4 lg:px-6 py-1 sm:py-1.5 lg:py-2">
-              <span className="text-[10px] sm:text-xs lg:text-sm font-bold text-primary">→ CAIXAS →</span>
             </div>
           </div>
         </div>
 
         {/* Legenda */}
-        <div className="mt-3 sm:mt-4 lg:mt-6 bg-gradient-to-r from-muted/30 via-background/50 to-muted/30 rounded-lg lg:rounded-xl p-3 sm:p-4 lg:p-5 border border-border/40">
-          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-10">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-4 h-4 sm:w-5 sm:h-5 rounded bg-muted/60 border border-muted-foreground/20 shadow-sm flex-shrink-0" />
-              <div>
-                <div className="text-[10px] sm:text-xs font-bold text-foreground">Normal</div>
-                <div className="text-[8px] sm:text-[10px] text-muted-foreground">{'>'} 60%</div>
+        <div className="py-3 px-4 border-t border-border/30 bg-muted/5">
+          <div className="flex justify-center gap-8">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded border-2 border-muted-foreground/10 bg-muted/40" />
+              <div className="text-xs">
+                <div className="font-bold text-foreground">OK (&gt;60%)</div>
+                <div className="text-muted-foreground">Pequeño/Gris</div>
               </div>
             </div>
             
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-gradient-to-br from-warning/50 to-warning/30 border-2 border-warning shadow-md ring-2 ring-warning/30 flex-shrink-0" />
-              <div>
-                <div className="text-[10px] sm:text-xs font-bold text-foreground">Atenção</div>
-                <div className="text-[8px] sm:text-[10px] text-muted-foreground">20-60%</div>
+            <div className="flex items-center gap-2">
+              <div className="w-16 h-16 rounded border-2 border-warning bg-warning/70 shadow-lg" />
+              <div className="text-xs">
+                <div className="font-bold text-foreground">Atención (20-60%)</div>
+                <div className="text-muted-foreground">Mediano/Amarillo</div>
               </div>
             </div>
             
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-gradient-to-br from-danger/60 to-danger/40 border-2 border-danger shadow-md ring-2 ring-danger/50 flex-shrink-0" />
-              <div>
-                <div className="text-[10px] sm:text-xs font-bold text-foreground">Crítico</div>
-                <div className="text-[8px] sm:text-[10px] text-muted-foreground">{'<'} 20%</div>
+            <div className="flex items-center gap-2">
+              <div className="w-24 h-24 rounded border-2 border-danger bg-danger/80 shadow-xl" />
+              <div className="text-xs">
+                <div className="font-bold text-foreground">Crítico (&lt;20%)</div>
+                <div className="text-muted-foreground">Grande/Rojo</div>
               </div>
             </div>
           </div>
