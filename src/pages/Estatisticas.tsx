@@ -53,7 +53,9 @@ export default function Estatisticas() {
     if (lojaSeleccionada === null) return;
 
     setIsLoading(true);
+    setUsandoMock(true);
     carregarDadosMock();
+    setIsLoading(false);
     const response = await getEstadisticas(lojaSeleccionada);
 
     if (response.sucesso && response.dados) {
