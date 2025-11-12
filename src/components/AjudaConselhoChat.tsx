@@ -12,11 +12,11 @@ interface Mensagem {
 }
 
 const RESPOSTAS_MOCK = [
-  "Entiendo tu preocupación. Basándome en los datos históricos, te recomendaría preparar el equipo con anticipación.",
-  "Buen punto. Según el análisis de flujo de clientes, podríamos optimizar esa área para mejorar la eficiencia.",
-  "Es una excelente observación. Los datos muestran que durante ese período hay un aumento significativo en la demanda.",
-  "Gracias por compartir eso. Voy a analizar los patrones actuales y te daré una recomendación más específica.",
-  "Interesante perspectiva. Basándome en las estadísticas de la tienda, eso podría ser muy beneficioso.",
+  "Entendo a tua preocupação. Com base nos dados históricos, recomendaria preparar a equipa com antecedência.",
+  "Bom ponto. Segundo a análise do fluxo de clientes, poderíamos otimizar essa área para melhorar a eficiência.",
+  "É uma excelente observação. Os dados mostram que durante esse período há um aumento significativo na procura.",
+  "Obrigado por partilhares isso. Vou analisar os padrões atuais e dar-te uma recomendação mais específica.",
+  "Perspetiva interessante. Com base nas estatísticas da loja, isso pode ser bastante benéfico.",
 ];
 
 export default function AjudaConselhoChat() {
@@ -24,7 +24,7 @@ export default function AjudaConselhoChat() {
   const [mensagens, setMensagens] = useState<Mensagem[]>([
     {
       role: "assistant",
-      content: "¡Hola! Estoy aquí para ayudarte con cualquier duda o sugerencia sobre la gestión de la tienda. ¿En qué puedo ayudarte?",
+      content: "Em que precisas de ajuda?",
       timestamp: new Date(),
     },
   ]);
