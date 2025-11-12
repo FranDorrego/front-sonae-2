@@ -42,37 +42,55 @@ export default function StoreMapPremium({
     }
   };
 
-  // Renderizar un producto individual
+  // Calcular flex-grow basado en la urgencia
+  const getFlexGrow = (status: Produto["status"]) => {
+    switch (status) {
+      case "critico":
+        return 4; // Ocupa más espacio
+      case "baixo":
+        return 2; // Espacio mediano
+      case "ok":
+        return 1; // Espacio mínimo
+    }
+  };
+
+  // Renderizar un producto individual con flex-grow dinámico
   const renderProducto = (produto: Produto) => {
-    const size = getProductSize(produto.status);
     const isOk = produto.status === "ok";
+    const flexGrow = getFlexGrow(produto.status);
 
     return (
       <button
         key={produto.id}
         onClick={() => onProductClick(produto)}
+        style={{ flexGrow }}
         className={cn(
-          "relative rounded border-2 transition-all hover:scale-110 hover:z-20 flex items-center justify-center",
-          size,
+          "relative rounded border-2 transition-all hover:scale-105 hover:z-20 flex items-center justify-center min-h-[60px]",
           getStatusColor(produto.status),
           "flex-shrink-0"
         )}
         title={`${produto.nome} - ${produto.percentual}%`}
       >
         {isOk ? (
-          <span className="text-[6px] font-medium text-muted-foreground text-center px-0.5 line-clamp-2">
+          <span className="text-[8px] font-medium text-muted-foreground text-center px-1 line-clamp-2">
             {produto.nome}
           </span>
         ) : (
-          <div className="flex flex-col items-center justify-center p-1 w-full">
-            <span className="text-[8px] font-bold text-foreground text-center line-clamp-2 mb-0.5">
+          <div className="flex flex-col items-center justify-center p-2 w-full">
+            <span className={cn(
+              "font-bold text-foreground text-center line-clamp-2 mb-1",
+              produto.status === "critico" ? "text-[12px]" : "text-[10px]"
+            )}>
               {produto.nome}
             </span>
-            <span className="text-[10px] font-extrabold text-foreground">
+            <span className={cn(
+              "font-extrabold text-foreground",
+              produto.status === "critico" ? "text-[14px]" : "text-[12px]"
+            )}>
               {produto.percentual}%
             </span>
             {produto.status === "critico" && (
-              <AlertCircle className="w-3 h-3 text-danger-foreground mt-0.5" />
+              <AlertCircle className="w-4 h-4 text-danger-foreground mt-1" />
             )}
           </div>
         )}
@@ -80,13 +98,13 @@ export default function StoreMapPremium({
     );
   };
 
-  // Renderizar una zona como estantería
+  // Renderizar una zona como estantería con productos que ocupan 100% del espacio
   const renderZona = (zona: Zona, orientation: "horizontal" | "vertical") => {
     const productosZona = productosPorZona[zona.zona] || [];
     
     return (
       <div className={cn(
-        "bg-muted/10 rounded-lg p-3 border-2 border-border/30 relative",
+        "bg-muted/10 rounded-lg p-3 border-2 border-border/30 relative h-full flex flex-col",
         orientation === "vertical" ? "min-h-[400px]" : "min-h-[120px]"
       )}>
         {/* Etiqueta de zona */}
@@ -94,14 +112,15 @@ export default function StoreMapPremium({
           <span className="text-xs font-bold text-foreground">{zona.zona}</span>
         </div>
         
-        {/* Productos en la zona */}
+        {/* Productos en la zona - ocupan 100% del espacio disponible */}
         <div className={cn(
-          "flex gap-2 flex-wrap p-2",
-          orientation === "vertical" ? "flex-col items-start" : "flex-row items-center justify-start"
+          "flex gap-2 p-2 flex-1",
+          orientation === "vertical" ? "flex-col" : "flex-row flex-wrap"
         )}>
-          {productosZona.map((produto) => renderProducto(produto))}
-          {productosZona.length === 0 && (
-            <span className="text-xs text-muted-foreground">Sin productos</span>
+          {productosZona.length > 0 ? (
+            productosZona.map((produto) => renderProducto(produto))
+          ) : (
+            <span className="text-xs text-muted-foreground m-auto">Sin productos</span>
           )}
         </div>
       </div>

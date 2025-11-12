@@ -7,7 +7,6 @@ import StoreMapPremium from "@/components/StoreMapPremium";
 import ProductModal from "@/components/ProductModal";
 import { getLojas, getStatus, Loja } from "@/services/backendService";
 import { get_data_stock } from "@/services/mockStockData";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 
 export default function Status() {
@@ -142,32 +141,17 @@ export default function Status() {
   };
 
   return (
-    <Layout>
+    <Layout
+      stores={lojas}
+      selectedStore={lojaSeleccionada?.toString()}
+      onStoreChange={handleLojaChange}
+    >
       <div className="p-4 md:p-6 animate-fade-in">
-        {/* Selector de Loja */}
-        <div className="mb-4 flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-foreground">Loja:</label>
-            <Select value={lojaSeleccionada?.toString()} onValueChange={handleLojaChange}>
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Seleccionar loja" />
-              </SelectTrigger>
-              <SelectContent>
-                {lojas.map((loja) => (
-                  <SelectItem key={loja.id} value={loja.id.toString()}>
-                    {loja.nombre}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          {usandoMock && (
-            <Badge variant="outline" className="text-xs text-muted-foreground border-muted-foreground/30">
-              Mock Data
-            </Badge>
-          )}
-        </div>
+        {usandoMock && (
+          <Badge variant="outline" className="text-xs text-muted-foreground border-muted-foreground/30 mb-4">
+            Mock Data
+          </Badge>
+        )}
 
         {erro && <ErrorMessage message={erro} />}
 
