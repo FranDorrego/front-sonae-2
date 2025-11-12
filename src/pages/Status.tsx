@@ -41,7 +41,22 @@ export default function Status() {
       }
       setUsandoMock(false);
     } else {
-      // Fallback a datos mock
+      // Fallback a datos mock con lojas y zonas predefinidas
+      const lojasMock: Loja[] = [
+        {
+          id: 1,
+          nombre: "Loja Demo",
+          zonas: [
+            { zona: "Zona Cítricos", camara_id: 101 },
+            { zona: "Zona Tropicales", camara_id: 102 },
+            { zona: "Zona Central", camara_id: 103 },
+            { zona: "Zona Verduras", camara_id: 104 },
+          ],
+        },
+      ];
+      setLojas(lojasMock);
+      setLojaSeleccionada(1);
+      setZonasActivas(lojasMock[0].zonas);
       setUsandoMock(true);
       carregarDadosMock();
     }
@@ -97,7 +112,18 @@ export default function Status() {
     const response = await get_data_stock();
     
     if (response.sucesso && response.dados) {
-      setProdutos(response.dados);
+      // Asignar zonas a los productos mock si no las tienen correctamente
+      const produtosComZonas = response.dados.map((p, index) => {
+        const zonaIndex = index % zonasActivas.length;
+        return {
+          ...p,
+          localizacao: {
+            ...p.localizacao,
+            zona: zonasActivas[zonaIndex]?.zona || p.localizacao.zona,
+          },
+        };
+      });
+      setProdutos(produtosComZonas);
       setErro(null);
     } else {
       setErro(response.erro || "Erro ao carregar dados");
