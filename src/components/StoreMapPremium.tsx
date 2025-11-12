@@ -18,6 +18,16 @@ export default function StoreMapPremium({
     acc[zona.zona] = produtos.filter(p => p.localizacao.zona === zona.zona);
     return acc;
   }, {} as Record<string, Produto[]>);
+
+  // Función para determinar la posición de cada zona en el layout
+  const getZonaLayout = (index: number, total: number) => {
+    // Distribución: arriba, izquierda, centro, derecha, abajo
+    if (index === 0) return { position: 'top', label: '↓' };
+    if (index === total - 1) return { position: 'bottom', label: '↑' };
+    if (index === 1) return { position: 'left', label: '→' };
+    if (index === total - 2 && total > 3) return { position: 'right', label: '←' };
+    return { position: 'center', label: '' };
+  };
   const getStatusColor = (status: Produto["status"]) => {
     switch (status) {
       case "ok":
@@ -45,6 +55,42 @@ export default function StoreMapPremium({
       return <AlertCircle className="w-4 h-4 text-danger-foreground" />;
     }
     return null;
+  };
+
+  const renderZonaEstante = (zona: Zona, index: number, layout: { position: string; label: string }) => {
+    const productosZona = productosPorZona[zona.zona] || [];
+    const isVertical = layout.position === 'left' || layout.position === 'right';
+    
+    return (
+      <div className={cn(
+        "bg-muted/20 rounded-lg lg:rounded-xl p-2 sm:p-3 lg:p-4 border border-border/40 shadow-sm",
+        layout.position === 'center' && "col-span-2"
+      )}>
+        <div className="flex items-center gap-2 mb-2 sm:mb-3">
+          {layout.label && (
+            <span className="text-[10px] sm:text-xs lg:text-sm font-bold text-primary">{layout.label}</span>
+          )}
+          <span className="text-[10px] sm:text-xs lg:text-sm font-bold text-secondary">
+            {zona.zona}
+          </span>
+        </div>
+        <div 
+          className={cn(
+            "grid gap-2 sm:gap-3 lg:gap-4",
+            isVertical ? "grid-cols-1" : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"
+          )}
+        >
+          {productosZona.map((producto) => (
+            <div key={producto.id}>{renderSingleProduct(producto)}</div>
+          ))}
+          {productosZona.length === 0 && (
+            <div className="col-span-full text-center text-muted-foreground text-xs py-4">
+              Sin productos
+            </div>
+          )}
+        </div>
+      </div>
+    );
   };
 
   const renderSingleProduct = (produto: Produto) => {
@@ -116,33 +162,55 @@ export default function StoreMapPremium({
             </div>
           </div>
 
-          {/* Layout dinámico por zonas */}
-          <div className="flex flex-col gap-4 sm:gap-6 lg:gap-10">
-            {zonas.map((zona, index) => {
-              const productosZona = productosPorZona[zona.zona] || [];
-              const numProductos = productosZona.length;
-              const cols = Math.min(Math.max(Math.ceil(Math.sqrt(numProductos)), 3), 5);
+          {/* Layout de supermercado con zonas posicionadas */}
+          <div className="flex flex-col gap-3 sm:gap-5 lg:gap-8">
+            
+            {/* Zona Superior (si existe) */}
+            {zonas.length > 0 && getZonaLayout(0, zonas.length).position === 'top' && (
+              <div>
+                {renderZonaEstante(zonas[0], 0, getZonaLayout(0, zonas.length))}
+              </div>
+            )}
+
+            {/* Área central con estantes laterales y centrales */}
+            <div className="grid grid-cols-4 gap-3 sm:gap-5 lg:gap-8">
               
-              return (
-                <div key={zona.camara_id}>
-                  <div className="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-3 lg:mb-4">
-                    <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/30 to-primary/30" />
-                    <span className="text-[10px] sm:text-xs lg:text-sm font-bold text-primary px-2 sm:px-3 lg:px-4 py-1 sm:py-1 lg:py-1.5 bg-primary/10 rounded-full shadow-sm whitespace-nowrap">
-                      {zona.zona}
-                    </span>
-                    <div className="h-px flex-1 bg-gradient-to-r from-primary/30 via-primary/30 to-transparent" />
-                  </div>
-                  <div 
-                    className="grid gap-2 sm:gap-3 lg:gap-5"
-                    style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
-                  >
-                    {productosZona.map((producto) => (
-                      <div key={producto.id}>{renderSingleProduct(producto)}</div>
-                    ))}
-                  </div>
+              {/* Estante Izquierdo */}
+              {zonas.length > 1 && getZonaLayout(1, zonas.length).position === 'left' && (
+                <div>
+                  {renderZonaEstante(zonas[1], 1, getZonaLayout(1, zonas.length))}
                 </div>
-              );
-            })}
+              )}
+
+              {/* Estantes Centrales */}
+              <div className="col-span-2 flex flex-col gap-3 sm:gap-5">
+                {zonas.map((zona, index) => {
+                  const layout = getZonaLayout(index, zonas.length);
+                  if (layout.position === 'center') {
+                    return (
+                      <div key={zona.camara_id}>
+                        {renderZonaEstante(zona, index, layout)}
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+
+              {/* Estante Derecho */}
+              {zonas.length > 3 && getZonaLayout(zonas.length - 2, zonas.length).position === 'right' && (
+                <div>
+                  {renderZonaEstante(zonas[zonas.length - 2], zonas.length - 2, getZonaLayout(zonas.length - 2, zonas.length))}
+                </div>
+              )}
+            </div>
+
+            {/* Zona Inferior (si existe) */}
+            {zonas.length > 2 && getZonaLayout(zonas.length - 1, zonas.length).position === 'bottom' && (
+              <div>
+                {renderZonaEstante(zonas[zonas.length - 1], zonas.length - 1, getZonaLayout(zonas.length - 1, zonas.length))}
+              </div>
+            )}
           </div>
 
           {/* CAIXAS - Parte inferior */}
