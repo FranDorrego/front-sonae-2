@@ -109,7 +109,7 @@ export default function StoreMapPremium({
       )}>
         {/* Etiqueta de zona */}
         <div className="absolute -top-2 sm:-top-3 left-2 sm:left-3 bg-background px-1.5 sm:px-2 py-0.5 rounded border border-border shadow-sm z-10">
-          <span className="text-[9px] sm:text-xs font-bold text-foreground">{zona.zona}</span>
+          <span className="text-[7px] sm:text-xs font-bold text-foreground">{zona.zona}</span>
         </div>
         
         {/* Productos en la zona - ocupan 100% del espacio disponible */}
@@ -150,7 +150,7 @@ export default function StoreMapPremium({
       <div className="w-full h-full max-w-[1600px] bg-gradient-to-br from-background via-muted/10 to-background rounded-lg sm:rounded-xl shadow-2xl border border-border/50 flex flex-col overflow-hidden">
         
         {/* Header */}
-        <div className="text-center py-1 sm:py-1 border-b border-border/30 bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5">
+        <div className="text-center py-2 sm:py-3 border-b border-border/30 bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5">
           <h2 className="text-base sm:text-xl font-bold text-foreground mb-0.5 sm:mb-1">
             Mapa de Loja
           </h2>
@@ -168,7 +168,7 @@ export default function StoreMapPremium({
             </div>
 
             {/* Layout del supermercado */}
-            <div className="grid grid-cols-12 gap-2 sm:gap-4 h-[calc(100%-80px)] sm:h-[calc(100%-100px)]">
+            <div className="grid grid-cols-12 gap-2 sm:gap-4 h-[calc(100%-80px)] sm:h-[calc(100%-100px)]  items-center gap-4">
               
               {/* COLUMNA IZQUIERDA (Zonas verticales) */}
               <div className="col-span-2 sm:col-span-2 flex flex-col gap-2 sm:gap-4">

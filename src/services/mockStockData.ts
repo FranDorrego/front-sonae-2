@@ -34,6 +34,7 @@ const MOCK_PRODUTOS: Produto[] = [
 ];
 
 export async function get_data_stock(): Promise<ApiResponse<Produto[]>> {
+  return { sucesso: true, dados: MOCK_PRODUTOS };
   try {
     const response = await api<Produto[]>("/stock");
 

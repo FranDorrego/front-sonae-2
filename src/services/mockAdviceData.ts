@@ -105,6 +105,7 @@ const MOCK_CONSELHOS: Conselho[] = [
 ];
 
 export async function get_data_conselhos(): Promise<ApiResponse<Conselho[]>> {
+  return { sucesso: true, dados: MOCK_CONSELHOS };
   try {
     const response = await api<Conselho[]>("/conselhos");
 
@@ -123,6 +124,7 @@ export async function post_resposta_conselho(
   conselhoId: string,
   aceito: boolean
 ): Promise<ApiResponse<void>> {
+  return { sucesso: true };
   try {
     const response = await api<void>(`/conselhos/${conselhoId}`, {
       method: "POST",

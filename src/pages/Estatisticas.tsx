@@ -35,7 +35,7 @@ export default function Estatisticas() {
 
   const carregarLojas = async () => {
     const response = await getLojas();
-    
+
     if (response.sucesso && response.dados) {
       setLojas(response.dados.lojas);
       if (response.dados.lojas.length > 0) {
@@ -51,10 +51,11 @@ export default function Estatisticas() {
 
   const carregarDatos = async () => {
     if (lojaSeleccionada === null) return;
-    
+
     setIsLoading(true);
+    carregarDadosMock();
     const response = await getEstadisticas(lojaSeleccionada);
-    
+
     if (response.sucesso && response.dados) {
       // Convertir datos del backend a formato Estatistica
       const estatisticasConvertidas: Estatistica[] = response.dados.estadisticas.map((e) => ({
@@ -65,7 +66,7 @@ export default function Estatisticas() {
         percentualEspaco: e["uso_espacio_%"],
         eficiencia: e["eficacia_%"] / 100, // Convertir a decimal
       }));
-      
+
       setEstatisticas(estatisticasConvertidas);
       setErro(null);
       setUsandoMock(false);
@@ -74,21 +75,21 @@ export default function Estatisticas() {
       setUsandoMock(true);
       carregarDadosMock();
     }
-    
+
     setIsLoading(false);
   };
 
   const carregarDadosMock = async () => {
     setIsLoading(true);
     const response = await get_data_estatisticas();
-    
+
     if (response.sucesso && response.dados) {
       setEstatisticas(response.dados);
       setErro(null);
     } else {
       setErro(response.erro || "Erro ao carregar dados");
     }
-    
+
     setIsLoading(false);
   };
 
@@ -110,7 +111,12 @@ export default function Estatisticas() {
   };
 
   return (
-    <Layout>
+    <Layout
+      stores={lojas}
+      selectedStore={lojaSeleccionada?.toString()}
+      onStoreChange={handleLojaChange}
+      showMockBadge={usandoMock}
+    >
       <div className="container mx-auto p-4 md:p-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">
           Estatísticas
@@ -119,30 +125,6 @@ export default function Estatisticas() {
           Análise de vendas e ocupação de espaço
         </p>
 
-        {/* Selector de Loja */}
-        <div className="mb-6 flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-foreground">Loja:</label>
-            <Select value={lojaSeleccionada?.toString()} onValueChange={handleLojaChange}>
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Seleccionar loja" />
-              </SelectTrigger>
-              <SelectContent>
-                {lojas.map((loja) => (
-                  <SelectItem key={loja.id} value={loja.id.toString()}>
-                    {loja.nombre}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          {usandoMock && (
-            <Badge variant="outline" className="text-xs text-muted-foreground border-muted-foreground/30">
-              Mock Data
-            </Badge>
-          )}
-        </div>
 
         {erro && <ErrorMessage message={erro} />}
 
@@ -155,7 +137,6 @@ export default function Estatisticas() {
                 <thead className="bg-muted/50">
                   <tr>
                     <th className="text-left p-4 font-semibold text-foreground">Produto</th>
-                    <th className="text-left p-4 font-semibold text-foreground">Categoria</th>
                     <th className="text-right p-4">
                       <button
                         onClick={() => ordenar("percentualVendas")}
@@ -189,7 +170,6 @@ export default function Estatisticas() {
                   {estatisticas.map((stat) => (
                     <tr key={stat.id} className="hover:bg-muted/30 transition-colors">
                       <td className="p-4 font-medium text-foreground">{stat.nomeProduto}</td>
-                      <td className="p-4 text-muted-foreground">{stat.categoria}</td>
                       <td className="p-4 text-right font-medium">{stat.percentualVendas.toFixed(1)}%</td>
                       <td className="p-4 text-right font-medium">{stat.percentualEspaco.toFixed(1)}%</td>
                       <td className="p-4 text-right">
@@ -198,8 +178,8 @@ export default function Estatisticas() {
                             stat.eficiencia >= 1.2
                               ? "text-success font-bold"
                               : stat.eficiencia < 0.8
-                              ? "text-danger font-bold"
-                              : "font-medium"
+                                ? "text-danger font-bold"
+                                : "font-medium"
                           }
                         >
                           {stat.eficiencia.toFixed(2)}

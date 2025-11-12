@@ -88,6 +88,11 @@ export async function getStatus(idLoja: number): Promise<ApiResponse<StatusRespo
 
 // Obtener estadísticas de una loja
 export async function getEstadisticas(idLoja: number): Promise<ApiResponse<EstadisticasResponse>> {
+  return {
+      sucesso: false,
+      erro: "Error al conectar con el backend",
+    };
+  
   try {
     const response = await fetch(`${BACKEND_URL}/estadistica/${idLoja}`);
     if (!response.ok) throw new Error("Error al cargar estadísticas");

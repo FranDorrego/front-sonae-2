@@ -30,6 +30,7 @@ export default function Status() {
   }, [lojaSeleccionada]);
 
   const carregarLojas = async () => {
+    carregarDadosMock();
     const response = await getLojas();
     
     if (response.sucesso && response.dados) {
@@ -65,6 +66,7 @@ export default function Status() {
     if (lojaSeleccionada === null) return;
     
     setIsLoading(true);
+    carregarDadosMock();
     const response = await getStatus(lojaSeleccionada);
     
     if (response.sucesso && response.dados) {

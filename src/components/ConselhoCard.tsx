@@ -58,20 +58,20 @@ export default function ConselhoCard({
         <Button
           onClick={onAceitar}
           disabled={isLoading}
-          size="lg"
+          size="sm" // chico
           className="flex-1 font-semibold"
         >
-          <Check className="w-4 h-4 mr-2" />
+          <Check className="w-3 h-3 mr-1" />
           Aceitar
         </Button>
         <Button
           onClick={onRejeitar}
           disabled={isLoading}
           variant="outline"
-          size="lg"
+          size="sm" // chico
           className="flex-1 font-semibold"
         >
-          <X className="w-4 h-4 mr-2" />
+          <X className="w-1 h-1 mr-1" />
           Rejeitar
         </Button>
       </div>
