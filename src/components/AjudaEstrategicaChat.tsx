@@ -11,22 +11,12 @@ interface Mensagem {
   timestamp: Date;
 }
 
-const RESPOSTAS_ESTRATEGICAS = [
-  "Analisando os dados desta loja, percebo que há oportunidades de melhoria na gestão de turnos. Recomendo revisar a distribuição de colaboradores nos horários de pico.",
-  "Com base nas métricas das últimas semanas, esta loja está performando bem. Sugiro documentar as práticas que estão funcionando para compartilhar com outras unidades.",
-  "Os indicadores mostram que há um problema recorrente de equipamentos. Recomendo uma reunião com manutenção para avaliar se é necessário um plano de substituição.",
-  "Segundo a análise de vendas, há uma tendência de queda que precisa ser investigada. Sugiro conversar com o gerente para entender se há fatores externos ou internos afetando o desempenho.",
-  "Esta loja tem apresentado rupturas frequentes de estoque. Recomendo revisar os processos de pedido e a capacidade de armazenamento para evitar perdas de vendas.",
-  "Os dados indicam que o desperdício está acima da média. Sugiro implementar um plano de ação focado em melhorar a rotação de produtos e treinamento da equipe.",
-  "Com base na análise estratégica, há uma oportunidade de otimizar os horários dos colaboradores. Recomendo ajustar os turnos para garantir melhor cobertura nos períodos de maior movimento.",
-];
-
 export default function AjudaEstrategicaChat() {
   const [open, setOpen] = useState(false);
   const [mensagens, setMensagens] = useState<Mensagem[]>([
     {
       role: "assistant",
-      content: "Que dúvida você tem sobre esta loja? Posso ajudar com análise estratégica, métricas de desempenho e recomendações para otimização.",
+      content: "Que necessitas analisar?",
       timestamp: new Date(),
     },
   ]);
@@ -46,17 +36,41 @@ export default function AjudaEstrategicaChat() {
     setInputMensagem("");
     setEnviando(true);
 
-    // Simular resposta da IA com foco estratégico
-    setTimeout(() => {
-      const respostaMock = RESPOSTAS_ESTRATEGICAS[Math.floor(Math.random() * RESPOSTAS_ESTRATEGICAS.length)];
+    try {
+      const response = await fetch("https://backagentesonae.sonae.arducloud.com/n8n/chat/estrategico", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: inputMensagem,
+          history: mensagens.map(m => ({
+            role: m.role,
+            content: m.content
+          }))
+        }),
+      });
+
+      const data = await response.json();
+      
       const respostaIA: Mensagem = {
         role: "assistant",
-        content: respostaMock,
+        content: data.output || "Desculpe, não consegui processar sua mensagem.",
         timestamp: new Date(),
       };
+      
       setMensagens((prev) => [...prev, respostaIA]);
+    } catch (error) {
+      console.error("Erro ao enviar mensagem:", error);
+      const respostaErro: Mensagem = {
+        role: "assistant",
+        content: "Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente.",
+        timestamp: new Date(),
+      };
+      setMensagens((prev) => [...prev, respostaErro]);
+    } finally {
       setEnviando(false);
-    }, 1200);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

@@ -11,22 +11,12 @@ interface Mensagem {
   timestamp: Date;
 }
 
-const RESPOSTAS_MOCK = [
-  "Entendo sua preocupação. Com base nos dados históricos, recomendo preparar a equipe com antecedência para esse período.",
-  "Boa observação. Segundo a análise do fluxo de clientes, poderíamos otimizar essa área para melhorar a eficiência operacional.",
-  "É uma excelente questão. Os dados mostram que durante esse período há um aumento significativo na demanda.",
-  "Obrigado por compartilhar isso. Vou analisar os padrões atuais da loja e te dar uma recomendação mais específica.",
-  "Perspectiva interessante. Com base nas estatísticas desta loja, isso pode trazer resultados positivos.",
-  "Segundo a análise estratégica, essa situação requer atenção. Sugiro conversar com o gerente para entender melhor o contexto.",
-  "Os indicadores mostram que essa é uma área que precisa de melhoria. Recomendo implementar um plano de ação nas próximas semanas.",
-];
-
 export default function AjudaConselhoChat() {
   const [open, setOpen] = useState(false);
   const [mensagens, setMensagens] = useState<Mensagem[]>([
     {
       role: "assistant",
-      content: "Que dúvida você tem sobre esta loja? Estou aqui para ajudar com análises e recomendações estratégicas.",
+      content: "Que necessitas fazer?",
       timestamp: new Date(),
     },
   ]);
@@ -46,17 +36,41 @@ export default function AjudaConselhoChat() {
     setInputMensagem("");
     setEnviando(true);
 
-    // Simular respuesta de la IA
-    setTimeout(() => {
-      const respostaMock = RESPOSTAS_MOCK[Math.floor(Math.random() * RESPOSTAS_MOCK.length)];
+    try {
+      const response = await fetch("https://backagentesonae.sonae.arducloud.com/n8n/chat/gerente", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: inputMensagem,
+          history: mensagens.map(m => ({
+            role: m.role,
+            content: m.content
+          }))
+        }),
+      });
+
+      const data = await response.json();
+      
       const respostaIA: Mensagem = {
         role: "assistant",
-        content: respostaMock,
+        content: data.output || "Desculpe, não consegui processar sua mensagem.",
         timestamp: new Date(),
       };
+      
       setMensagens((prev) => [...prev, respostaIA]);
+    } catch (error) {
+      console.error("Erro ao enviar mensagem:", error);
+      const respostaErro: Mensagem = {
+        role: "assistant",
+        content: "Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente.",
+        timestamp: new Date(),
+      };
+      setMensagens((prev) => [...prev, respostaErro]);
+    } finally {
       setEnviando(false);
-    }, 1000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
