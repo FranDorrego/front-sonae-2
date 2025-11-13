@@ -10,6 +10,7 @@ import TarefasGerente from "./pages/TarefasGerente";
 import Conselhos from "./pages/Conselhos";
 import ConselhosEstrategico from "./pages/ConselhosEstrategico";
 import Estatisticas from "./pages/Estatisticas";
+import TestingCV from "./pages/TestingCV";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/conselhos" element={<Conselhos />} />
           <Route path="/conselhos-estrategico" element={<ConselhosEstrategico />} />
           <Route path="/estatisticas" element={<Estatisticas />} />
+          <Route path="/testing-cv" element={<TestingCV />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
