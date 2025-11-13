@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Users, UserCog, TrendingUp } from "lucide-react";
+import { Users, UserCog, TrendingUp, Camera } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 type Rol = "operador" | "gerente" | "estrategico";
 
@@ -66,6 +67,23 @@ const Index = () => {
               <div className="text-left">
                 <div className="font-semibold text-sm sm:text-base">Estratégico/Gerência</div>
                 <div className="text-xs opacity-70">Visão estratégica e análise completa</div>
+              </div>
+            </Button>
+
+            <Separator className="my-3" />
+
+            <Button
+              variant="outline"
+              className="h-auto py-3 sm:py-4 px-4 sm:px-6 flex items-center justify-start gap-3 sm:gap-4 hover:bg-secondary hover:text-secondary-foreground transition-all border-2"
+              onClick={() => {
+                setOpen(false);
+                navigate("/testing-cv");
+              }}
+            >
+              <Camera className="h-5 w-5 sm:h-6 sm:w-6 shrink-0" />
+              <div className="text-left">
+                <div className="font-semibold text-sm sm:text-base">Visualizar CV / Testing CV</div>
+                <div className="text-xs opacity-70">Teste o processo de análise de imagens</div>
               </div>
             </Button>
           </div>
