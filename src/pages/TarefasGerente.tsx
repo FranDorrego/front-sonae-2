@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Tarefa, getTarefasPorZona } from "@/services/mockTaskData";
+import { Tarefa, getTarefasPorZona, criarTarefa, deletarTarefa } from "@/services/taskService";
 import { Plus, Trash2, Sparkles, Clock, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -57,27 +57,45 @@ export default function TarefasGerente() {
     }
   };
 
-  const handleAddTask = () => {
+  const handleAddTask = async () => {
     if (!newTaskTitle.trim()) return;
     
-    toast({
-      title: "Tarefa Adicionada",
-      description: `Nova tarefa adicionada à zona de ${zonas.find(z => z.value === zonaSeleccionada)?.label}`,
-    });
-    
-    setShowAddModal(false);
-    setNewTaskTitle("");
-    setNewTaskDescription("");
-    setZonaSeleccionada("");
-    carregarTodasTarefas();
+    try {
+      await criarTarefa(newTaskTitle, newTaskDescription, zonaSeleccionada, false);
+      toast({
+        title: "Tarefa Adicionada",
+        description: `Nova tarefa adicionada à zona de ${zonas.find(z => z.value === zonaSeleccionada)?.label}`,
+      });
+      
+      setShowAddModal(false);
+      setNewTaskTitle("");
+      setNewTaskDescription("");
+      setZonaSeleccionada("");
+      carregarTodasTarefas();
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível adicionar a tarefa",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleDeleteTask = (zona: string, tarefaId: string) => {
-    toast({
-      title: "Tarefa Removida",
-      description: "A tarefa foi removida com sucesso",
-    });
-    carregarTodasTarefas();
+  const handleDeleteTask = async (zona: string, tarefaId: string) => {
+    try {
+      await deletarTarefa(tarefaId);
+      toast({
+        title: "Tarefa Removida",
+        description: "A tarefa foi removida com sucesso",
+      });
+      carregarTodasTarefas();
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível remover a tarefa",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleAcceptSuggestion = (suggestion: string) => {

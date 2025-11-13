@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, CheckCircle2, XCircle } from "lucide-react";
-import { Tarefa } from "@/services/mockTaskData";
+import { Tarefa } from "@/services/taskService";
 
 interface TaskCardProps {
   tarefa: Tarefa;
