@@ -6,7 +6,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Status from "./pages/Status";
 import Task from "./pages/Task";
+import TarefasGerente from "./pages/TarefasGerente";
 import Conselhos from "./pages/Conselhos";
+import ConselhosEstrategico from "./pages/ConselhosEstrategico";
 import Estatisticas from "./pages/Estatisticas";
 import NotFound from "./pages/NotFound";
 
@@ -22,7 +24,9 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/status" element={<Status />} />
           <Route path="/task" element={<Task />} />
+          <Route path="/tarefas-gerente" element={<TarefasGerente />} />
           <Route path="/conselhos" element={<Conselhos />} />
+          <Route path="/conselhos-estrategico" element={<ConselhosEstrategico />} />
           <Route path="/estatisticas" element={<Estatisticas />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

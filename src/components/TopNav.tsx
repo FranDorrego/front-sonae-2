@@ -16,6 +16,8 @@ export default function TopNav({ stores, selectedStore, onStoreChange, showMockB
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
   const isOperador = currentView === "operador";
+  const isGerente = currentView === "gerente";
+  const isEstrategico = currentView === "estrategico";
 
   const getHomeUrl = () => {
     window.location.href = "/";
@@ -60,7 +62,7 @@ export default function TopNav({ stores, selectedStore, onStoreChange, showMockB
                 <span className="text-sm font-medium">Status</span>
               </Link>
             </>
-          ) : (
+          ) : isGerente ? (
             <>
               <Link
                 to={buildUrl("/status")}
@@ -85,6 +87,32 @@ export default function TopNav({ stores, selectedStore, onStoreChange, showMockB
                 <Lightbulb className="w-4 h-4" />
                 <span className="text-sm font-medium">Conselhos</span>
               </Link>
+
+              <Link
+                to={buildUrl("/tarefas-gerente")}
+                className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg transition-all duration-300 ${
+                  isActive("/tarefas-gerente")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Lightbulb className="w-4 h-4" />
+                <span className="text-sm font-medium">Tarefas</span>
+              </Link>
+            </>
+          ) : isEstrategico ? (
+            <>
+              <Link
+                to={buildUrl("/status")}
+                className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg transition-all duration-300 ${
+                  isActive("/status")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <MapPin className="w-4 h-4" />
+                <span className="text-sm font-medium">Status</span>
+              </Link>
               
               <Link
                 to={buildUrl("/estatisticas")}
@@ -96,6 +124,32 @@ export default function TopNav({ stores, selectedStore, onStoreChange, showMockB
               >
                 <BarChart3 className="w-4 h-4" />
                 <span className="text-sm font-medium">Estatísticas</span>
+              </Link>
+              
+              <Link
+                to={buildUrl("/conselhos-estrategico")}
+                className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg transition-all duration-300 ${
+                  isActive("/conselhos-estrategico")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Lightbulb className="w-4 h-4" />
+                <span className="text-sm font-medium">Conselhos</span>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to={buildUrl("/status")}
+                className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg transition-all duration-300 ${
+                  isActive("/status")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <MapPin className="w-4 h-4" />
+                <span className="text-sm font-medium">Status</span>
               </Link>
             </>
           )}
@@ -127,7 +181,7 @@ export default function TopNav({ stores, selectedStore, onStoreChange, showMockB
                 <MapPin className="w-4 h-4" />
               </Link>
             </>
-          ) : (
+          ) : isGerente ? (
             <>
               <Link
                 to={buildUrl("/status")}
@@ -152,6 +206,30 @@ export default function TopNav({ stores, selectedStore, onStoreChange, showMockB
               </Link>
               
               <Link
+                to={buildUrl("/tarefas-gerente")}
+                className={`flex items-center justify-center p-2 rounded-lg transition-all duration-300 ${
+                  isActive("/tarefas-gerente")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Lightbulb className="w-4 h-4" />
+              </Link>
+            </>
+          ) : isEstrategico ? (
+            <>
+              <Link
+                to={buildUrl("/status")}
+                className={`flex items-center justify-center p-2 rounded-lg transition-all duration-300 ${
+                  isActive("/status")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <MapPin className="w-4 h-4" />
+              </Link>
+              
+              <Link
                 to={buildUrl("/estatisticas")}
                 className={`flex items-center justify-center p-2 rounded-lg transition-all duration-300 ${
                   isActive("/estatisticas")
@@ -160,6 +238,30 @@ export default function TopNav({ stores, selectedStore, onStoreChange, showMockB
                 }`}
               >
                 <BarChart3 className="w-4 h-4" />
+              </Link>
+              
+              <Link
+                to={buildUrl("/conselhos-estrategico")}
+                className={`flex items-center justify-center p-2 rounded-lg transition-all duration-300 ${
+                  isActive("/conselhos-estrategico")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Lightbulb className="w-4 h-4" />
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to={buildUrl("/status")}
+                className={`flex items-center justify-center p-2 rounded-lg transition-all duration-300 ${
+                  isActive("/status")
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <MapPin className="w-4 h-4" />
               </Link>
             </>
           )}
