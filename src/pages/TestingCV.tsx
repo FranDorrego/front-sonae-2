@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ArrowLeft, Upload, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { API_BASE_URL } from "@/services/api";
@@ -28,7 +29,25 @@ interface UploadResponse {
         alerts: string[];
       };
       steps: string[];
+      raw_data?: {
+        timestamp: number;
+        shelves: Array<{
+          shelf_id: string;
+          boxes: Array<{
+            position: {
+              xo: number;
+              yo: number;
+              xd: number;
+              yd: number;
+            };
+            item_id: number;
+            fullness_percent: number;
+            fullness_confidence: number;
+          }>;
+        }>;
+      };
     };
+    raw_data?: any;
   };
 }
 
@@ -38,16 +57,15 @@ export default function TestingCV() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [currentStep, setCurrentStep] = useState<number>(-1);
   const [steps, setSteps] = useState<string[]>([]);
   const [finalResult, setFinalResult] = useState<any>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
-      setCurrentStep(-1);
       setSteps([]);
       setFinalResult(null);
       
@@ -58,7 +76,6 @@ export default function TestingCV() {
 
   const handleUpload = async (file: File) => {
     setIsUploading(true);
-    setCurrentStep(-1);
     setSteps([]);
     setFinalResult(null);
 
@@ -87,16 +104,7 @@ export default function TestingCV() {
       const forwardData = data.forward_response?.forward_response;
       const stepImages = forwardData?.steps || [];
       setSteps(stepImages);
-      
-      // Mostrar pasos en secuencia con animación
-      for (let i = 0; i < stepImages.length; i++) {
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        setCurrentStep(i);
-      }
-
-      // Al finalizar, mostrar resultado completo
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setFinalResult(forwardData);
+      setFinalResult(data);
       
       toast({
         title: "Análise completa",
@@ -117,9 +125,9 @@ export default function TestingCV() {
   const resetUpload = () => {
     setSelectedFile(null);
     setPreviewUrl(null);
-    setCurrentStep(-1);
     setSteps([]);
     setFinalResult(null);
+    setSelectedImage(null);
   };
 
   return (
@@ -176,36 +184,27 @@ export default function TestingCV() {
 
         {/* Process Steps */}
         {steps.length > 0 && (
-          <div className="space-y-8">
-            <h2 className="text-2xl font-bold text-center">Proceso de Análisis</h2>
-            <div className="grid gap-6">
+          <div className="space-y-8 animate-fade-in">
+            <h2 className="text-2xl font-bold text-center mb-6">Proceso de Análisis</h2>
+            <div className="grid grid-cols-6 gap-4">
               {steps.map((stepUrl, index) => (
-                <div
+                <Card 
                   key={index}
-                  className={`transition-all duration-500 ${
-                    index <= currentStep ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                  }`}
+                  className="p-4 cursor-pointer hover:shadow-lg transition-all"
+                  onClick={() => setSelectedImage(stepUrl)}
                 >
-                  {index <= currentStep && (
-                    <Card className="p-6">
-                      <div className="flex flex-col items-center gap-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">
-                            {index + 1}
-                          </div>
-                          <h3 className="text-xl font-semibold">
-                            Paso {index + 1}
-                          </h3>
-                        </div>
-                        <img
-                          src={stepUrl}
-                          alt={`Paso ${index + 1}`}
-                          className="w-full max-w-3xl rounded-lg border shadow-lg"
-                        />
-                      </div>
-                    </Card>
-                  )}
-                </div>
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">
+                      {index + 1}
+                    </div>
+                    <img
+                      src={stepUrl}
+                      alt={`Paso ${index + 1}`}
+                      className="w-full aspect-square object-cover rounded-lg border"
+                    />
+                    <p className="text-xs font-medium text-center">Paso {index + 1}</p>
+                  </div>
+                </Card>
               ))}
             </div>
           </div>
@@ -216,65 +215,104 @@ export default function TestingCV() {
           <div className="space-y-8 animate-fade-in mt-8">
             <h2 className="text-2xl font-bold text-center">Resultado del Análisis</h2>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Card className="p-6">
-                <h3 className="text-sm font-medium text-muted-foreground mb-2">Produtos Detectados</h3>
-                <p className="text-2xl font-bold">{finalResult.info.products_detected.length}</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {finalResult.info.products_detected.join(", ")}
-                </p>
-              </Card>
-              
-              <Card className="p-6">
-                <h3 className="text-sm font-medium text-muted-foreground mb-2">Total de Boxes</h3>
-                <p className="text-2xl font-bold">{finalResult.info.total_boxes}</p>
-              </Card>
-              
-              <Card className="p-6">
-                <h3 className="text-sm font-medium text-muted-foreground mb-2">Nível de Stock</h3>
-                <p className="text-2xl font-bold">{finalResult.info.stock_percent}%</p>
-              </Card>
-              
-              <Card className="p-6">
-                <h3 className="text-sm font-medium text-muted-foreground mb-2">Alertas</h3>
-                <div className="flex flex-wrap gap-2">
-                  {finalResult.info.alerts.map((alert: string, i: number) => (
-                    <span
-                      key={i}
-                      className="px-2 py-1 bg-destructive/10 text-destructive text-xs rounded-md"
-                    >
-                      {alert}
-                    </span>
-                  ))}
+            {finalResult.forward_response?.forward_response?.info && (
+              <>
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <Card className="p-6">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-2">Produtos Detectados</h3>
+                    <p className="text-2xl font-bold">{finalResult.forward_response.forward_response.info.products_detected.length}</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {finalResult.forward_response.forward_response.info.products_detected.join(", ")}
+                    </p>
+                  </Card>
+                  
+                  <Card className="p-6">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-2">Total de Boxes</h3>
+                    <p className="text-2xl font-bold">{finalResult.forward_response.forward_response.info.total_boxes}</p>
+                  </Card>
+                  
+                  <Card className="p-6">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-2">Nível de Stock</h3>
+                    <p className="text-2xl font-bold">{finalResult.forward_response.forward_response.info.stock_percent}%</p>
+                  </Card>
+                  
+                  <Card className="p-6">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-2">Alertas</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {finalResult.forward_response.forward_response.info.alerts.length > 0 ? (
+                        finalResult.forward_response.forward_response.info.alerts.map((alert: string, i: number) => (
+                          <span
+                            key={i}
+                            className="px-2 py-1 bg-destructive/10 text-destructive text-xs rounded-md"
+                          >
+                            {alert}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-xs text-muted-foreground">Sin alertas</span>
+                      )}
+                    </div>
+                  </Card>
                 </div>
-              </Card>
-            </div>
 
-            <Card className="p-6">
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">Distribución de Llenado</h3>
-              <div className="grid grid-cols-4 gap-4 mt-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold">{finalResult.info.fill_distribution.empty}</p>
-                  <p className="text-xs text-muted-foreground">Vacío</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold">{finalResult.info.fill_distribution.low}</p>
-                  <p className="text-xs text-muted-foreground">Bajo</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold">{finalResult.info.fill_distribution.medium}</p>
-                  <p className="text-xs text-muted-foreground">Medio</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold">{finalResult.info.fill_distribution.full}</p>
-                  <p className="text-xs text-muted-foreground">Lleno</p>
-                </div>
-              </div>
-            </Card>
+                <Card className="p-6">
+                  <h3 className="text-sm font-medium text-muted-foreground mb-4">Distribución de Llenado</h3>
+                  <div className="grid grid-cols-4 gap-4">
+                    <div className="text-center">
+                      <p className="text-2xl font-bold">{finalResult.forward_response.forward_response.info.fill_distribution.empty}</p>
+                      <p className="text-xs text-muted-foreground">Vacío</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold">{finalResult.forward_response.forward_response.info.fill_distribution.low}</p>
+                      <p className="text-xs text-muted-foreground">Bajo</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold">{finalResult.forward_response.forward_response.info.fill_distribution.medium}</p>
+                      <p className="text-xs text-muted-foreground">Medio</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold">{finalResult.forward_response.forward_response.info.fill_distribution.full}</p>
+                      <p className="text-xs text-muted-foreground">Lleno</p>
+                    </div>
+                  </div>
+                </Card>
+
+                {finalResult.forward_response.forward_response.raw_data && (
+                  <Card className="p-6">
+                    <h3 className="text-lg font-semibold mb-4">Datos Detallados (Raw Data)</h3>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-4 text-sm">
+                        <span className="text-muted-foreground">Timestamp:</span>
+                        <span className="font-mono">{new Date(finalResult.forward_response.forward_response.raw_data.timestamp * 1000).toLocaleString()}</span>
+                      </div>
+                      
+                      {finalResult.forward_response.forward_response.raw_data.shelves.map((shelf: any, shelfIdx: number) => (
+                        <div key={shelfIdx} className="border rounded-lg p-4">
+                          <h4 className="font-semibold mb-3">Estante {shelf.shelf_id}</h4>
+                          <div className="grid gap-3">
+                            {shelf.boxes.map((box: any, boxIdx: number) => (
+                              <div key={boxIdx} className="bg-muted/50 rounded p-3 text-xs font-mono">
+                                <div className="grid grid-cols-2 gap-2">
+                                  <div><span className="text-muted-foreground">Box:</span> {boxIdx + 1}</div>
+                                  <div><span className="text-muted-foreground">Item ID:</span> {box.item_id}</div>
+                                  <div><span className="text-muted-foreground">Llenado:</span> {box.fullness_percent.toFixed(2)}%</div>
+                                  <div><span className="text-muted-foreground">Confianza:</span> {box.fullness_confidence.toFixed(2)}%</div>
+                                  <div className="col-span-2"><span className="text-muted-foreground">Posición:</span> ({box.position.xo}, {box.position.yo}) - ({box.position.xd}, {box.position.yd})</div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </Card>
+                )}
+              </>
+            )}
 
             <Card className="p-6">
               <h3 className="text-lg font-semibold mb-4">JSON Completo</h3>
-              <pre className="bg-muted p-4 rounded-lg overflow-auto max-h-96 text-sm">
+              <pre className="bg-muted p-4 rounded-lg overflow-auto max-h-96 text-sm font-mono">
                 {JSON.stringify(finalResult, null, 2)}
               </pre>
             </Card>
@@ -286,6 +324,19 @@ export default function TestingCV() {
             </div>
           </div>
         )}
+
+        {/* Image Dialog */}
+        <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+          <DialogContent className="max-w-4xl">
+            {selectedImage && (
+              <img
+                src={selectedImage}
+                alt="Paso ampliado"
+                className="w-full h-auto rounded-lg"
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </main>
     </div>
   );
