@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Sparkles, CheckCircle2, XCircle, Upload } from "lucide-react";
-import { Tarefa, atualizarTarefa } from "@/services/mockTaskData";
+import { Tarefa, atualizarTarefa, adicionarComentario } from "@/services/taskService";
 import { useToast } from "@/hooks/use-toast";
 
 interface TaskModalProps {
@@ -28,10 +28,10 @@ export default function TaskModal({ tarefa, onClose }: TaskModalProps) {
   const handleConcluir = async () => {
     try {
       setIsLoading(true);
-      await atualizarTarefa(tarefa.id, "concluida", {
-        texto: comentario,
-        fotos: fotos.map(f => f.name),
-      });
+      await atualizarTarefa(tarefa.id, { status: "concluida" });
+      if (comentario.trim() || fotos.length > 0) {
+        await adicionarComentario(tarefa.id, comentario, fotos.map(f => f.name));
+      }
       toast({
         title: "Tarefa Concluída",
         description: "A tarefa foi marcada como concluída com sucesso.",
@@ -51,10 +51,10 @@ export default function TaskModal({ tarefa, onClose }: TaskModalProps) {
   const handleMarcarErro = async () => {
     try {
       setIsLoading(true);
-      await atualizarTarefa(tarefa.id, "erro", {
-        texto: comentario,
-        fotos: fotos.map(f => f.name),
-      });
+      await atualizarTarefa(tarefa.id, { status: "erro" });
+      if (comentario.trim() || fotos.length > 0) {
+        await adicionarComentario(tarefa.id, comentario, fotos.map(f => f.name));
+      }
       toast({
         title: "Erro Reportado",
         description: "A tarefa foi marcada com erro.",
@@ -103,10 +103,8 @@ export default function TaskModal({ tarefa, onClose }: TaskModalProps) {
   const handleResolver = async () => {
     try {
       setIsLoading(true);
-      await atualizarTarefa(tarefa.id, "concluida", {
-        texto: comentario || "Problema resolvido",
-        fotos: fotos.map(f => f.name),
-      });
+      await atualizarTarefa(tarefa.id, { status: "concluida" });
+      await adicionarComentario(tarefa.id, comentario || "Problema resolvido", fotos.map(f => f.name));
       toast({
         title: "Tarefa Resolvida",
         description: "A tarefa foi marcada como resolvida com sucesso.",

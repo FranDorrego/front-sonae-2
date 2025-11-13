@@ -4,7 +4,7 @@ import Layout from "@/components/Layout";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
 import TaskModal from "@/components/TaskModal";
-import { Tarefa, getTarefasPorZona } from "@/services/mockTaskData";
+import { Tarefa, getTarefasPorZona } from "@/services/taskService";
 import { Clock, AlertCircle } from "lucide-react";
 
 const zonas = [
