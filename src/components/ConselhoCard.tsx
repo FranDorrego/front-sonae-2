@@ -49,66 +49,74 @@ export default function ConselhoCard({
     <>
       <div
         className={cn(
-          "bg-card border-l-4 rounded-xl p-6 space-y-5 shadow-md hover:shadow-lg transition-shadow",
+          "bg-card border-l-4 rounded-xl p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4 md:space-y-5 shadow-md hover:shadow-lg transition-shadow",
           getPrioridadeColor()
         )}
       >
-        <div className="flex items-start gap-4">
-          <div className="p-3 bg-secondary/10 rounded-xl text-secondary flex-shrink-0">
+        <div className="flex items-start gap-2 sm:gap-3 md:gap-4">
+          <div className="p-2 sm:p-2.5 md:p-3 bg-secondary/10 rounded-xl text-secondary flex-shrink-0">
             {getIcon()}
           </div>
-          <div className="flex-1 space-y-3">
-            <h3 className="font-bold text-xl text-card-foreground leading-tight">
+          <div className="flex-1 space-y-2 sm:space-y-2.5 md:space-y-3 min-w-0">
+            <h3 className="font-bold text-sm sm:text-base md:text-xl text-card-foreground leading-tight">
               {conselho.titulo}
             </h3>
-            <p className="text-base text-card-foreground/80 leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-card-foreground/80 leading-relaxed">
               {conselho.descricao}
             </p>
           </div>
         </div>
 
-        <div className="flex gap-3 pt-2">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
           <Button
             onClick={onAceitar}
             disabled={isLoading}
-            size="default"
-            className="flex-1 font-semibold"
+            size="sm"
+            className="flex-1 font-semibold text-xs sm:text-sm"
           >
-            <Check className="w-4 h-4 mr-2" />
+            <Check className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
             Aceitar
           </Button>
           <Button
             onClick={() => setShowRejectDialog(true)}
             disabled={isLoading}
             variant="outline"
-            size="default"
-            className="flex-1 font-semibold"
+            size="sm"
+            className="flex-1 font-semibold text-xs sm:text-sm"
           >
-            <X className="w-4 h-4 mr-2" />
+            <X className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
             Rejeitar
           </Button>
         </div>
       </div>
 
       <Dialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
-        <DialogContent>
+        <DialogContent className="max-w-[95vw] sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>¿Por qué rechazas este consejo?</DialogTitle>
-            <DialogDescription>
-              Tu feedback nos ayuda a mejorar las sugerencias de la IA.
+            <DialogTitle className="text-base sm:text-lg">Por que você rejeita este conselho?</DialogTitle>
+            <DialogDescription className="text-sm">
+              Seu feedback nos ajuda a melhorar as sugestões da IA.
             </DialogDescription>
           </DialogHeader>
           <Textarea
-            placeholder="Escribe el motivo..."
+            placeholder="Digite o motivo..."
             value={motivoRejeicao}
             onChange={(e) => setMotivoRejeicao(e.target.value)}
-            className="min-h-[100px]"
+            className="min-h-[80px] sm:min-h-[100px] text-sm"
           />
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowRejectDialog(false)}>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowRejectDialog(false)}
+              className="w-full sm:w-auto"
+            >
               Cancelar
             </Button>
-            <Button onClick={handleReject} disabled={!motivoRejeicao.trim()}>
+            <Button 
+              onClick={handleReject} 
+              disabled={!motivoRejeicao.trim()}
+              className="w-full sm:w-auto"
+            >
               Enviar
             </Button>
           </DialogFooter>

@@ -225,7 +225,7 @@ export default function Estatisticas() {
           </TabsContent>
 
           <TabsContent value="consumo">
-            <div className="grid gap-4">
+            <div className="grid gap-3 md:gap-4">
               {historicoConsumo.map((item) => {
                 const maxCantidad = Math.max(...item.datos.map(d => d.cantidad));
                 const minCantidad = Math.min(...item.datos.map(d => d.cantidad));
@@ -237,28 +237,28 @@ export default function Estatisticas() {
 
                 return (
                   <Card key={item.producto}>
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg">{item.producto}</CardTitle>
-                        <div className="flex items-center gap-2">
+                    <CardHeader className="pb-2 md:pb-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                        <CardTitle className="text-base md:text-lg">{item.producto}</CardTitle>
+                        <div className="flex items-center gap-1.5 md:gap-2">
                           <TrendingUp 
-                            className={`h-4 w-4 ${
+                            className={`h-3 w-3 md:h-4 md:w-4 ${
                               tendencia === "up" ? "text-green-500" : "text-red-500 rotate-180"
                             }`} 
                           />
-                          <span className="text-sm font-medium">
-                            Média: {promedio} unidades/dia
+                          <span className="text-xs md:text-sm font-medium whitespace-nowrap">
+                            Média: {promedio} un/dia
                           </span>
                         </div>
                       </div>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
-                        <div className="flex justify-between text-xs text-muted-foreground mb-2">
+                        <div className="flex justify-between text-[10px] sm:text-xs text-muted-foreground mb-2">
                           <span>Últimos 30 dias</span>
                           <span>Máx: {maxCantidad} | Mín: {minCantidad}</span>
                         </div>
-                        <div className="flex items-end gap-1 h-32">
+                        <div className="flex items-end gap-0.5 sm:gap-1 h-24 sm:h-28 md:h-32">
                           {item.datos.map((dato, idx) => {
                             const height = (dato.cantidad / maxCantidad) * 100;
                             const isRecent = idx >= item.datos.length - 7;
@@ -276,7 +276,7 @@ export default function Estatisticas() {
                                   }`}
                                   style={{ height: `${height}%` }}
                                 />
-                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-popover text-popover-foreground text-xs rounded px-2 py-1 whitespace-nowrap shadow-lg border z-10">
+                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-popover text-popover-foreground text-[10px] sm:text-xs rounded px-1.5 sm:px-2 py-1 whitespace-nowrap shadow-lg border z-10">
                                   {new Date(dato.fecha).toLocaleDateString("pt-BR", { 
                                     day: "2-digit", 
                                     month: "2-digit" 
