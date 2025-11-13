@@ -60,6 +60,7 @@ export default function TestingCV() {
   const [steps, setSteps] = useState<string[]>([]);
   const [finalResult, setFinalResult] = useState<any>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedStepIndex, setSelectedStepIndex] = useState<number | null>(null);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -128,6 +129,31 @@ export default function TestingCV() {
     setSteps([]);
     setFinalResult(null);
     setSelectedImage(null);
+    setSelectedStepIndex(null);
+  };
+
+  const handleStepClick = (stepUrl: string, index: number) => {
+    setSelectedImage(stepUrl);
+    setSelectedStepIndex(index);
+  };
+
+  const handleKeyNavigation = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (selectedStepIndex === null || !steps.length) return;
+    
+    if (e.key === "ArrowRight" && selectedStepIndex < steps.length - 1) {
+      const newIndex = selectedStepIndex + 1;
+      setSelectedStepIndex(newIndex);
+      setSelectedImage(steps[newIndex]);
+    } else if (e.key === "ArrowLeft" && selectedStepIndex > 0) {
+      const newIndex = selectedStepIndex - 1;
+      setSelectedStepIndex(newIndex);
+      setSelectedImage(steps[newIndex]);
+    }
+  };
+
+  const handleDialogClose = () => {
+    setSelectedImage(null);
+    setSelectedStepIndex(null);
   };
 
   return (
@@ -186,23 +212,23 @@ export default function TestingCV() {
         {steps.length > 0 && (
           <div className="space-y-8 animate-fade-in">
             <h2 className="text-2xl font-bold text-center mb-6">Proceso de Análisis</h2>
-            <div className="grid grid-cols-6 gap-4">
+            <div className="grid grid-cols-6 gap-6">
               {steps.map((stepUrl, index) => (
                 <Card 
                   key={index}
-                  className="p-4 cursor-pointer hover:shadow-lg transition-all"
-                  onClick={() => setSelectedImage(stepUrl)}
+                  className="p-6 cursor-pointer hover:shadow-lg transition-all hover:scale-105"
+                  onClick={() => handleStepClick(stepUrl, index)}
                 >
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-base">
                       {index + 1}
                     </div>
                     <img
                       src={stepUrl}
                       alt={`Paso ${index + 1}`}
-                      className="w-full aspect-square object-cover rounded-lg border"
+                      className="w-full aspect-square object-cover rounded-lg border-2"
                     />
-                    <p className="text-xs font-medium text-center">Paso {index + 1}</p>
+                    <p className="text-sm font-medium text-center">Paso {index + 1}</p>
                   </div>
                 </Card>
               ))}
@@ -326,14 +352,22 @@ export default function TestingCV() {
         )}
 
         {/* Image Dialog */}
-        <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-          <DialogContent className="max-w-4xl">
-            {selectedImage && (
-              <img
-                src={selectedImage}
-                alt="Paso ampliado"
-                className="w-full h-auto rounded-lg"
-              />
+        <Dialog open={!!selectedImage} onOpenChange={handleDialogClose}>
+          <DialogContent className="max-w-7xl max-h-[90vh]" onKeyDown={handleKeyNavigation}>
+            {selectedImage && selectedStepIndex !== null && (
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">Paso {selectedStepIndex + 1} de {steps.length}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Usa las flechas ← → para navegar
+                  </p>
+                </div>
+                <img
+                  src={selectedImage}
+                  alt={`Paso ${selectedStepIndex + 1}`}
+                  className="w-full h-auto rounded-lg"
+                />
+              </div>
             )}
           </DialogContent>
         </Dialog>
