@@ -30,7 +30,7 @@ export default function TestingCV() {
   const [steps, setSteps] = useState<string[]>([]);
   const [finalResult, setFinalResult] = useState<any>(null);
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setSelectedFile(file);
@@ -38,19 +38,20 @@ export default function TestingCV() {
       setCurrentStep(-1);
       setSteps([]);
       setFinalResult(null);
+      
+      // Enviar automáticamente
+      await handleUpload(file);
     }
   };
 
-  const handleUpload = async () => {
-    if (!selectedFile) return;
-
+  const handleUpload = async (file: File) => {
     setIsUploading(true);
     setCurrentStep(-1);
     setSteps([]);
     setFinalResult(null);
 
     const formData = new FormData();
-    formData.append("file", selectedFile);
+    formData.append("file", file);
 
     try {
       const response = await fetch(`${API_BASE_URL}/upload-supermarket`, {
@@ -128,142 +129,124 @@ export default function TestingCV() {
       </header>
 
       {/* Main Content */}
-      <main className="container max-w-4xl py-6 px-4 space-y-6">
-        {/* Upload Area */}
-        <Card className="p-6">
-          <h2 className="text-lg font-semibold mb-4">1. Selecione uma Imagem</h2>
-          <div className="space-y-4">
+      <main className="container max-w-5xl py-6 px-4">
+        {!isUploading && !steps.length && !finalResult && (
+          <div className="flex items-center justify-center min-h-[60vh]">
             <input
               type="file"
               accept="image/*"
               onChange={handleFileSelect}
               className="hidden"
               id="file-upload"
+              disabled={isUploading}
             />
-            <label htmlFor="file-upload">
-              <div className="border-2 border-dashed rounded-lg p-8 text-center cursor-pointer hover:border-primary transition-colors">
-                <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-sm font-medium">
-                  {selectedFile ? selectedFile.name : "Clique para selecionar uma imagem"}
-                </p>
-                <p className="text-xs text-muted-foreground mt-2">
-                  JPG, PNG (máx. 10MB)
-                </p>
-              </div>
-            </label>
-
-            {previewUrl && (
-              <div className="space-y-4">
-                <img 
-                  src={previewUrl} 
-                  alt="Preview" 
-                  className="w-full max-h-64 object-contain rounded-lg border"
-                />
-                <div className="flex gap-2">
-                  <Button 
-                    onClick={handleUpload} 
-                    disabled={isUploading}
-                    className="flex-1"
-                  >
-                    {isUploading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Analisando...
-                      </>
-                    ) : (
-                      "Analisar Imagem"
-                    )}
-                  </Button>
-                  <Button 
-                    onClick={resetUpload} 
-                    variant="outline"
-                    disabled={isUploading}
-                  >
-                    Limpar
-                  </Button>
+            <label htmlFor="file-upload" className="cursor-pointer">
+              <Card className="p-12 hover:border-primary transition-all hover:shadow-lg">
+                <div className="text-center">
+                  <Upload className="h-20 w-20 mx-auto mb-6 text-muted-foreground" />
+                  <p className="text-lg font-medium mb-2">Selecione uma imagem</p>
+                  <p className="text-sm text-muted-foreground">
+                    JPG, PNG (máx. 10MB)
+                  </p>
                 </div>
-              </div>
-            )}
+              </Card>
+            </label>
           </div>
-        </Card>
+        )}
+
+        {isUploading && (
+          <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
+            <Loader2 className="h-16 w-16 animate-spin text-primary" />
+            <p className="text-lg font-medium">Analisando imagem...</p>
+          </div>
+        )}
 
         {/* Process Steps */}
         {steps.length > 0 && (
-          <Card className="p-6">
-            <h2 className="text-lg font-semibold mb-4">2. Processo de Análise</h2>
-            <div className="space-y-4">
-              {steps.map((stepUrl, index) => (
-                <div
-                  key={index}
-                  className={`transition-all duration-500 ${
-                    currentStep >= index ? 'opacity-100' : 'opacity-30'
-                  }`}
-                >
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                      currentStep >= index 
-                        ? 'bg-primary text-primary-foreground' 
-                        : 'bg-muted text-muted-foreground'
-                    }`}>
-                      {index + 1}
-                    </div>
-                    <p className="text-sm font-medium">
-                      {index === 0 && "Imagem Original"}
-                      {index === 1 && "Detecção de Objetos"}
-                      {index === 2 && "Segmentação"}
-                      {index === 3 && "Classificação"}
-                      {index === 4 && "Resultado Final"}
-                      {index > 4 && `Passo ${index + 1}`}
-                    </p>
+          <div className="space-y-8 animate-fade-in">
+            {steps.map((stepUrl, index) => (
+              <Card
+                key={index}
+                className={`p-6 transition-all duration-700 ${
+                  currentStep >= index 
+                    ? 'opacity-100 scale-100' 
+                    : 'opacity-40 scale-95'
+                }`}
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold transition-all ${
+                    currentStep >= index 
+                      ? 'bg-primary text-primary-foreground shadow-lg scale-110' 
+                      : 'bg-muted text-muted-foreground'
+                  }`}>
+                    {index + 1}
                   </div>
-                  <img
-                    src={stepUrl}
-                    alt={`Step ${index + 1}`}
-                    className="w-full rounded-lg border"
-                  />
+                  <p className="text-lg font-semibold">
+                    {index === 0 && "Imagem Original"}
+                    {index === 1 && "Detecção de Objetos"}
+                    {index === 2 && "Segmentação"}
+                    {index === 3 && "Classificação"}
+                    {index === 4 && "Resultado Final"}
+                    {index > 4 && `Passo ${index + 1}`}
+                  </p>
                 </div>
-              ))}
-            </div>
-          </Card>
+                <img
+                  src={stepUrl}
+                  alt={`Step ${index + 1}`}
+                  className="w-full rounded-lg border shadow-md"
+                />
+              </Card>
+            ))}
+          </div>
         )}
 
         {/* Final Result */}
         {finalResult && (
-          <Card className="p-6">
-            <h2 className="text-lg font-semibold mb-4">3. Resultado da Análise</h2>
-            <div className="bg-muted p-4 rounded-lg">
-              <pre className="text-xs overflow-auto">
-                {JSON.stringify(finalResult, null, 2)}
-              </pre>
-            </div>
-            <div className="mt-4 space-y-2 text-sm">
-              <p><span className="font-semibold">Produto Detectado:</span> {finalResult.product_detected}</p>
-              <p><span className="font-semibold">Nível de Stock:</span> {finalResult.stock_percent}%</p>
+          <Card className="p-8 mt-8 animate-fade-in">
+            <h2 className="text-2xl font-bold mb-6 text-center">Resultado</h2>
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-primary/10 p-6 rounded-lg">
+                  <p className="text-sm text-muted-foreground mb-2">Produto Detectado</p>
+                  <p className="text-2xl font-bold">{finalResult.product_detected}</p>
+                </div>
+                <div className="bg-primary/10 p-6 rounded-lg">
+                  <p className="text-sm text-muted-foreground mb-2">Nível de Stock</p>
+                  <p className="text-2xl font-bold">{finalResult.stock_percent}%</p>
+                </div>
+              </div>
+              
               {finalResult.alerts && finalResult.alerts.length > 0 && (
-                <div>
-                  <span className="font-semibold">Alertas:</span>
-                  <ul className="list-disc list-inside ml-4">
+                <div className="bg-destructive/10 p-6 rounded-lg">
+                  <p className="text-sm font-semibold mb-3">Alertas</p>
+                  <ul className="space-y-2">
                     {finalResult.alerts.map((alert: string, i: number) => (
-                      <li key={i}>{alert}</li>
+                      <li key={i} className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-destructive" />
+                        <span>{alert}</span>
+                      </li>
                     ))}
                   </ul>
                 </div>
               )}
+
+              <div className="bg-muted p-4 rounded-lg">
+                <p className="text-xs font-mono text-muted-foreground mb-2">JSON</p>
+                <pre className="text-xs overflow-auto">
+                  {JSON.stringify(finalResult, null, 2)}
+                </pre>
+              </div>
+
+              <Button 
+                onClick={resetUpload} 
+                className="w-full"
+                size="lg"
+              >
+                Analisar Nova Imagem
+              </Button>
             </div>
           </Card>
         )}
-
-        {/* Explanation */}
-        <Card className="p-6 bg-muted/50">
-          <h3 className="font-semibold mb-2">Como Funciona</h3>
-          <p className="text-sm text-muted-foreground">
-            Este sistema utiliza visão computacional para analisar imagens de supermercados em tempo real. 
-            As câmaras instaladas nas lojas capturam imagens que são processadas para detectar produtos, 
-            avaliar níveis de stock e identificar situações que requerem atenção. 
-            Os dados obtidos alimentam a base de dados que é analisada por agentes de IA via N8N, 
-            gerando os conselhos e status atuais da loja apresentados nas outras vistas do sistema.
-          </p>
-        </Card>
       </main>
     </div>
   );
