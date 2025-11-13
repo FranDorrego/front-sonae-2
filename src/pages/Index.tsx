@@ -22,54 +22,52 @@ const Index = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md w-full max-w-[95vw]">
           <DialogHeader>
-            <DialogTitle className="text-2xl">Selecione sua Vista</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-xl sm:text-2xl">Selecione sua Vista</DialogTitle>
+            <DialogDescription className="text-sm">
               Escolha o perfil que melhor se adequa à sua função
             </DialogDescription>
           </DialogHeader>
           
-          <div className="flex flex-col gap-3 mt-4">
+          <div className="flex flex-col gap-2 sm:gap-3 mt-4">
             <Button
               variant="outline"
-              className="h-auto py-4 px-6 flex items-center justify-start gap-4 hover:bg-primary hover:text-primary-foreground transition-all"
+              className="h-auto py-3 sm:py-4 px-4 sm:px-6 flex items-center justify-start gap-3 sm:gap-4 hover:bg-primary hover:text-primary-foreground transition-all"
               onClick={() => handleSeleccionRol("operador")}
             >
-              <Users className="h-6 w-6" />
+              <Users className="h-5 w-5 sm:h-6 sm:w-6 shrink-0" />
               <div className="text-left">
-                <div className="font-semibold text-base">Operador</div>
+                <div className="font-semibold text-sm sm:text-base">Operador</div>
                 <div className="text-xs opacity-70">Gestão de tarefas e status por zona</div>
               </div>
             </Button>
 
             <Button
               variant="outline"
-              className="h-auto py-4 px-6 flex items-center justify-start gap-4 hover:bg-primary hover:text-primary-foreground transition-all"
+              className="h-auto py-3 sm:py-4 px-4 sm:px-6 flex items-center justify-start gap-3 sm:gap-4 hover:bg-primary hover:text-primary-foreground transition-all"
               onClick={() => handleSeleccionRol("gerente")}
             >
-              <UserCog className="h-6 w-6" />
+              <UserCog className="h-5 w-5 sm:h-6 sm:w-6 shrink-0" />
               <div className="text-left">
-                <div className="font-semibold text-base">Gerente</div>
-                <div className="text-xs opacity-70">Status, conselhos e estatísticas da loja</div>
+                <div className="font-semibold text-sm sm:text-base">Gerente</div>
+                <div className="text-xs opacity-70">Status, conselhos e tarefas da loja</div>
               </div>
             </Button>
-
 
             <Button
               variant="outline"
-              className="h-auto py-4 px-6 flex items-center justify-start gap-4 hover:bg-primary hover:text-primary-foreground transition-all"
+              className="h-auto py-3 sm:py-4 px-4 sm:px-6 flex items-center justify-start gap-3 sm:gap-4 hover:bg-primary hover:text-primary-foreground transition-all"
               onClick={() => handleSeleccionRol("estrategico")}
             >
-              <TrendingUp className="h-6 w-6" />
+              <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 shrink-0" />
               <div className="text-left">
-                <div className="font-semibold text-base">Estratégico/Gerência</div>
+                <div className="font-semibold text-sm sm:text-base">Estratégico/Gerência</div>
                 <div className="text-xs opacity-70">Visão estratégica e análise completa</div>
               </div>
             </Button>
-
           </div>
         </DialogContent>
       </Dialog>

@@ -115,47 +115,54 @@ export default function TarefasGerente() {
       showMockBadge={true}
       currentView={view}
     >
-      <div className="container mx-auto p-4 md:p-6 max-w-7xl">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold mb-2">Gestão de Tarefas</h1>
-            <p className="text-muted-foreground">
+      <div className="container mx-auto p-3 sm:p-4 md:p-6 max-w-7xl">
+        <div className="mb-4 md:mb-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div className="flex-1">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2">Gestão de Tarefas</h1>
+            <p className="text-sm md:text-base text-muted-foreground">
               Gerencie tarefas para todas as zonas
             </p>
           </div>
-          <Button onClick={() => setShowSuggestionsModal(true)} variant="outline">
+          <Button 
+            onClick={() => setShowSuggestionsModal(true)} 
+            variant="outline"
+            size="sm"
+            className="w-full sm:w-auto"
+          >
             <Sparkles className="h-4 w-4 mr-2" />
-            Ver Sugestões IA
+            <span className="text-sm">Ver Sugestões IA</span>
           </Button>
         </div>
 
         {isLoading ? (
           <LoadingSpinner />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
             {zonas.map((zona) => {
               const tarefas = tarefasPorZona[zona.value] || [];
               
               return (
                 <Card key={zona.value}>
                   <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{zona.label}</CardTitle>
+                    <div className="flex items-center justify-between gap-2">
+                      <CardTitle className="text-base md:text-lg">{zona.label}</CardTitle>
                       <Button
                         size="sm"
                         onClick={() => {
                           setZonaSeleccionada(zona.value);
                           setShowAddModal(true);
                         }}
+                        className="text-xs"
                       >
-                        <Plus className="h-4 w-4 mr-1" />
-                        Adicionar
+                        <Plus className="h-3 w-3 md:h-4 md:w-4 mr-1" />
+                        <span className="hidden sm:inline">Adicionar</span>
+                        <span className="sm:hidden">+</span>
                       </Button>
                     </div>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="pt-3">
                     {tarefas.length === 0 ? (
-                      <p className="text-sm text-muted-foreground text-center py-4">
+                      <p className="text-xs md:text-sm text-muted-foreground text-center py-3 md:py-4">
                         Nenhuma tarefa pendente
                       </p>
                     ) : (
@@ -163,13 +170,13 @@ export default function TarefasGerente() {
                         {tarefas.map((tarefa) => (
                           <div
                             key={tarefa.id}
-                            className="border border-border rounded-lg p-3 hover:shadow-sm transition-shadow"
+                            className="border border-border rounded-lg p-2 md:p-3 hover:shadow-sm transition-shadow"
                           >
-                            <div className="flex items-start justify-between gap-2 mb-2">
-                              <div className="flex items-center gap-2 flex-1 min-w-0">
-                                <h4 className="font-medium text-sm truncate">{tarefa.titulo}</h4>
+                            <div className="flex items-start justify-between gap-2 mb-1 md:mb-2">
+                              <div className="flex items-center gap-1.5 md:gap-2 flex-1 min-w-0">
+                                <h4 className="font-medium text-xs md:text-sm truncate">{tarefa.titulo}</h4>
                                 {tarefa.criadaPorIA && (
-                                  <span className="shrink-0 text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded">
+                                  <span className="shrink-0 text-[10px] md:text-xs bg-primary/10 text-primary px-1 md:px-1.5 py-0.5 rounded">
                                     IA
                                   </span>
                                 )}
@@ -178,24 +185,24 @@ export default function TarefasGerente() {
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => handleDeleteTask(zona.value, tarefa.id)}
-                                className="h-6 w-6 p-0"
+                                className="h-5 w-5 md:h-6 md:w-6 p-0 shrink-0"
                               >
-                                <Trash2 className="h-3 w-3" />
+                                <Trash2 className="h-2.5 w-2.5 md:h-3 md:w-3" />
                               </Button>
                             </div>
-                            <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                            <p className="text-[11px] md:text-xs text-muted-foreground mb-1 md:mb-2 line-clamp-2">
                               {tarefa.descricao}
                             </p>
                             <div className="flex items-center gap-1">
                               {tarefa.status === "erro" ? (
                                 <div className="flex items-center gap-1 text-red-500">
-                                  <AlertCircle className="h-3 w-3" />
-                                  <span className="text-xs font-medium">Erro</span>
+                                  <AlertCircle className="h-2.5 w-2.5 md:h-3 md:w-3" />
+                                  <span className="text-[10px] md:text-xs font-medium">Erro</span>
                                 </div>
                               ) : (
                                 <div className="flex items-center gap-1 text-yellow-600">
-                                  <Clock className="h-3 w-3" />
-                                  <span className="text-xs font-medium">Pendente</span>
+                                  <Clock className="h-2.5 w-2.5 md:h-3 md:w-3" />
+                                  <span className="text-[10px] md:text-xs font-medium">Pendente</span>
                                 </div>
                               )}
                             </div>

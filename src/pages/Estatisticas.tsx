@@ -135,20 +135,26 @@ export default function Estatisticas() {
       showMockBadge={usandoMock}
       currentView={view}
     >
-      <div className="container mx-auto p-4 md:p-8 max-w-6xl">
-        <h1 className="text-3xl font-bold text-foreground mb-2">
+      <div className="container mx-auto p-3 sm:p-4 md:p-6 lg:p-8 max-w-6xl">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-1 md:mb-2">
           Estatísticas
         </h1>
-        <p className="text-muted-foreground mb-6">
+        <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6">
           Análise de vendas, ocupação de espaço e consumo em tempo real
         </p>
 
         {erro && <ErrorMessage message={erro} />}
 
         <Tabs defaultValue="eficiencia" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6">
-            <TabsTrigger value="eficiencia">Eficiência de Espaço</TabsTrigger>
-            <TabsTrigger value="consumo">Histórico de Consumo</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 mb-4 md:mb-6">
+            <TabsTrigger value="eficiencia" className="text-xs sm:text-sm">
+              <span className="hidden sm:inline">Eficiência de Espaço</span>
+              <span className="sm:hidden">Eficiência</span>
+            </TabsTrigger>
+            <TabsTrigger value="consumo" className="text-xs sm:text-sm">
+              <span className="hidden sm:inline">Histórico de Consumo</span>
+              <span className="sm:hidden">Consumo</span>
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="eficiencia">

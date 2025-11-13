@@ -60,10 +60,10 @@ export default function Task() {
       showMockBadge={true}
       currentView={view}
     >
-      <div className="container mx-auto p-4 md:p-6 max-w-5xl">
-        <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">Tarefas</h1>
-          <p className="text-muted-foreground">
+      <div className="container mx-auto p-3 sm:p-4 md:p-6 max-w-5xl">
+        <div className="mb-4 md:mb-6">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2">Tarefas</h1>
+          <p className="text-sm md:text-base text-muted-foreground">
             Gerencie suas tarefas diárias por zona
           </p>
         </div>
@@ -73,46 +73,46 @@ export default function Task() {
         ) : erro ? (
           <ErrorMessage message={erro} />
         ) : tarefasActivas.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground text-lg">
+          <div className="text-center py-8 md:py-12">
+            <p className="text-sm md:text-base text-muted-foreground">
               Nenhuma tarefa pendente para esta zona
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2 md:space-y-3">
             {tarefasActivas.map((tarefa) => (
               <div
                 key={tarefa.id}
                 onClick={() => handleTarefaClick(tarefa)}
-                className="bg-card border border-border rounded-lg p-4 hover:shadow-md transition-all cursor-pointer hover:border-primary/50"
+                className="bg-card border border-border rounded-lg p-3 md:p-4 hover:shadow-md transition-all cursor-pointer hover:border-primary/50 active:scale-[0.99]"
               >
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start justify-between gap-3 md:gap-4">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold text-base truncate">
+                    <div className="flex items-center gap-1.5 md:gap-2 mb-1">
+                      <h3 className="font-semibold text-sm md:text-base truncate">
                         {tarefa.titulo}
                       </h3>
                       {tarefa.criadaPorIA && (
-                        <span className="shrink-0 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">
+                        <span className="shrink-0 text-[10px] md:text-xs bg-primary/10 text-primary px-1.5 md:px-2 py-0.5 rounded">
                           IA
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2">
+                    <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">
                       {tarefa.descricao}
                     </p>
                   </div>
                   
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
                     {tarefa.status === "erro" ? (
-                      <div className="flex items-center gap-1 text-red-500">
-                        <AlertCircle className="h-4 w-4" />
-                        <span className="text-xs font-medium">Erro</span>
+                      <div className="flex flex-col sm:flex-row items-end sm:items-center gap-0.5 sm:gap-1 text-red-500">
+                        <AlertCircle className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                        <span className="text-[10px] md:text-xs font-medium">Erro</span>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-1 text-yellow-600">
-                        <Clock className="h-4 w-4" />
-                        <span className="text-xs font-medium">Pendente</span>
+                      <div className="flex flex-col sm:flex-row items-end sm:items-center gap-0.5 sm:gap-1 text-yellow-600">
+                        <Clock className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                        <span className="text-[10px] md:text-xs font-medium">Pendente</span>
                       </div>
                     )}
                   </div>

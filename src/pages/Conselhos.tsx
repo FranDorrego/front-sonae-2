@@ -74,14 +74,14 @@ export default function Conselhos() {
       showMockBadge={true}
       currentView={view}
     >
-      <div className="container mx-auto p-4 md:p-8 max-w-4xl">
-        <div className="flex items-center justify-between mb-2">
-          <h1 className="text-3xl font-bold text-foreground">
+      <div className="container mx-auto p-3 sm:p-4 md:p-6 lg:p-8 max-w-4xl">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-2 md:mb-3">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground">
             Conselhos IA
           </h1>
           <AjudaConselhoChat />
         </div>
-        <p className="text-muted-foreground mb-6">
+        <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6">
           Sugestões inteligentes baseadas em dados históricos
         </p>
 
@@ -90,11 +90,11 @@ export default function Conselhos() {
         {isLoading ? (
           <LoadingSpinner />
         ) : conselhos.length === 0 ? (
-          <p className="text-muted-foreground text-center py-8">
+          <p className="text-sm md:text-base text-muted-foreground text-center py-6 md:py-8">
             Sem conselhos no momento
           </p>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 md:space-y-4">
             {conselhos.map((conselho) => (
               <ConselhoCard
                 key={conselho.id}

@@ -43,48 +43,96 @@ const conselhosEstrategicos: ConselhoEstrategico[] = [
   {
     id: "ce1",
     tipo: "recursos-humanos",
-    titulo: "Avaliar contratação de colaboradores",
-    descricao: "Há 12 tarefas pendentes acumuladas nas últimas 2 semanas. Recomenda-se avaliar a carga de trabalho com o gerente e considerar reforço na equipe.",
+    titulo: "Avaliar reforço de equipe na Carniceria",
+    descricao: "Há 15 tarefas pendentes acumuladas nas últimas 2 semanas na zona de carniceria. O tempo médio de conclusão aumentou 40%. Recomenda-se avaliar a carga de trabalho com o gerente e considerar contratação de mais 1-2 colaboradores para esta zona.",
     prioridade: "alta",
     loja: "Loja Centro",
   },
   {
     id: "ce2",
     tipo: "manutencao",
-    titulo: "Atenção aos equipamentos",
-    descricao: "Foram reportados 4 problemas de equipamentos no último mês. Agende uma conversa com a equipe de manutenção para investigar as causas.",
-    prioridade: "media",
+    titulo: "Verificação urgente de equipamentos de refrigeração",
+    descricao: "Foram reportados 6 problemas de temperatura em equipamentos de refrigeração no último mês, com 3 incidentes críticos. Agende uma inspeção completa com a equipe de manutenção e considere um plano de manutenção preventiva trimestral.",
+    prioridade: "alta",
     loja: "Loja Sul",
   },
   {
     id: "ce3",
     tipo: "vendas",
-    titulo: "Queda nas vendas sem justificativa",
-    descricao: "As vendas caíram 15% em relação ao mês anterior sem fatores externos conhecidos. Consulte o gerente para identificar possíveis causas.",
+    titulo: "Declínio significativo nas vendas - Investigação necessária",
+    descricao: "As vendas caíram 18% em relação ao mesmo período do mês anterior, sem fatores externos conhecidos (clima, feriados, promoções). Reúna-se urgentemente com o gerente para investigar possíveis causas: atendimento, qualidade dos produtos, concorrência local ou problemas operacionais.",
     prioridade: "alta",
     loja: "Loja Norte",
   },
   {
     id: "ce4",
     tipo: "inventario",
-    titulo: "Rupturas frequentes de estoque",
-    descricao: "Maçãs têm ficado sem estoque 5x nas últimas 3 semanas. Analise os envios e capacidade de armazenamento para esta loja.",
-    prioridade: "media",
+    titulo: "Ruptura recorrente - Maçãs Gala",
+    descricao: "Maçãs Gala ficaram sem estoque 7 vezes nas últimas 3 semanas, resultando em perda estimada de €850 em vendas. Analise os dados de fornecimento: a) Aumentar pedidos semanais de 120kg para 180kg, b) Verificar capacidade de armazenamento na câmara fria, c) Considerar fornecedor alternativo.",
+    prioridade: "alta",
     loja: "Loja Centro",
   },
   {
     id: "ce5",
+    tipo: "inventario",
+    titulo: "Excesso de desperdício - Verduras de folha",
+    descricao: "Taxa de desperdício de verduras de folha está em 22% (meta: 12%). Nas últimas 4 semanas foram descartados 45kg de alfaces e 38kg de espinafres. Recomenda-se: ajustar quantidade de pedidos, melhorar rotação de produtos e revisar processo de recebimento com o gerente.",
+    prioridade: "media",
+    loja: "Loja Norte",
+  },
+  {
+    id: "ce6",
     tipo: "operacional",
-    titulo: "Otimização de turnos",
-    descricao: "Análise mostra baixo movimento entre 14h-16h e alto movimento às 18h-20h. Considere reorganizar os horários dos colaboradores para melhor cobertura.",
+    titulo: "Otimização de turnos para horários de pico",
+    descricao: "Análise de movimento mostra: baixo fluxo entre 14h-16h (apenas 12% do movimento diário) e alto fluxo às 18h-20h (38% do movimento). Considere reorganizar turnos: reduzir 1 colaborador no período da tarde e reforçar com 2 no horário de pico. Economia estimada: €420/mês com melhor cobertura.",
+    prioridade: "media",
+    loja: "Loja Sul",
+  },
+  {
+    id: "ce7",
+    tipo: "operacional",
+    titulo: "Atraso sistemático na preparação matinal",
+    descricao: "A abertura da loja tem ocorrido com 15-25 minutos de atraso nas últimas 2 semanas. Identifique com o gerente se há problemas de: transporte dos colaboradores, processos de preparação muito longos, ou necessidade de ajuste no horário de entrada da equipe de abertura.",
+    prioridade: "media",
+    loja: "Loja Centro",
+  },
+  {
+    id: "ce8",
+    tipo: "manutencao",
+    titulo: "Plano de renovação de equipamentos",
+    descricao: "3 balanças digitais e 2 câmaras frias estão em uso há mais de 8 anos (vida útil recomendada: 6-7 anos). Os custos de manutenção aumentaram 65% este ano. Prepare um orçamento para substituição gradual nos próximos 6 meses antes de ocorrerem falhas críticas.",
+    prioridade: "media",
+    loja: "Loja Sul",
+  },
+  {
+    id: "ce9",
+    tipo: "vendas",
+    titulo: "Oportunidade: Produtos sazonais de verão",
+    descricao: "Aproximação do verão detectada. Histórico mostra aumento de 35% nas vendas de melancia, melão e frutas tropicais entre junho-agosto. Recomenda-se: negociar contratos com fornecedores com antecedência, aumentar espaço de exposição em 20%, e preparar campanha promocional.",
+    prioridade: "baixa",
+    loja: "Loja Norte",
+  },
+  {
+    id: "ce10",
+    tipo: "recursos-humanos",
+    titulo: "Necessidade de treinamento - Novos colaboradores",
+    descricao: "4 novos colaboradores contratados nas últimas 6 semanas. Taxa de erros operacionais aumentou 28% (etiquetagem incorreta, produtos mal armazenados). Organize sessão de treinamento intensivo de 2 dias focado em: procedimentos de qualidade, sistema de refrigeração e atendimento ao cliente.",
+    prioridade: "media",
+    loja: "Loja Centro",
+  },
+  {
+    id: "ce11",
+    tipo: "reconhecimento",
+    titulo: "Excelente desempenho - Parabenize a equipe!",
+    descricao: "Esta loja alcançou 96% de eficiência operacional nas últimas 5 semanas consecutivas, com zero rupturas críticas e satisfação do cliente em 4.7/5. Resultados excepcionais! Considere: reconhecimento público da equipe, incentivo financeiro ou bônus, e compartilhar as melhores práticas com outras lojas.",
     prioridade: "baixa",
     loja: "Loja Sul",
   },
   {
-    id: "ce6",
+    id: "ce12",
     tipo: "reconhecimento",
-    titulo: "Métricas excepcionais",
-    descricao: "Esta loja mantém 95% de eficiência nas últimas 4 semanas. Considere dar reconhecimento à equipe para manter a motivação.",
+    titulo: "Redução impressionante de desperdício",
+    descricao: "A taxa de desperdício desta loja caiu de 19% para 11% em 2 meses (-42% de redução), economizando aproximadamente €1.250. A equipe está implementando excelentes práticas de gestão. Recomenda-se reconhecimento formal e documentar o processo para replicar em outras unidades.",
     prioridade: "baixa",
     loja: "Loja Centro",
   },
@@ -141,13 +189,13 @@ export default function ConselhosEstrategico() {
       showMockBadge={true}
       currentView={view}
     >
-      <div className="container mx-auto p-4 md:p-6 max-w-5xl">
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-2">
-            <Building2 className="h-6 w-6" />
-            <h1 className="text-2xl md:text-3xl font-bold">Conselhos Estratégicos</h1>
+      <div className="container mx-auto p-3 sm:p-4 md:p-6 max-w-6xl">
+        <div className="mb-4 md:mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+            <Building2 className="h-5 w-5 sm:h-6 sm:w-6" />
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">Conselhos Estratégicos</h1>
           </div>
-          <p className="text-muted-foreground">
+          <p className="text-sm md:text-base text-muted-foreground">
             Análises e recomendações para gestão estratégica da loja
           </p>
         </div>
@@ -165,31 +213,31 @@ export default function ConselhosEstrategico() {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 md:space-y-4">
             {conselhosFiltrados.map((conselho) => {
               const Icon = iconMap[conselho.tipo];
               
               return (
-                <Card key={conselho.id}>
-                  <CardHeader>
-                    <div className="flex items-start gap-4">
-                      <div className="p-3 rounded-lg bg-primary/10">
-                        <Icon className="h-6 w-6 text-primary" />
+                <Card key={conselho.id} className="hover:shadow-md transition-shadow">
+                  <CardHeader className="pb-3 md:pb-4">
+                    <div className="flex items-start gap-3 md:gap-4">
+                      <div className="p-2 md:p-3 rounded-lg bg-primary/10 flex-shrink-0">
+                        <Icon className="h-5 w-5 md:h-6 md:w-6 text-primary" />
                       </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <CardTitle className="text-lg">{conselho.titulo}</CardTitle>
-                          <Badge className={prioridadeColor[conselho.prioridade]}>
-                            {conselho.prioridade === "alta" && "Alta Prioridade"}
-                            {conselho.prioridade === "media" && "Prioridade Média"}
-                            {conselho.prioridade === "baixa" && "Prioridade Baixa"}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-col sm:flex-row sm:items-start gap-2 mb-2">
+                          <CardTitle className="text-base md:text-lg flex-1">{conselho.titulo}</CardTitle>
+                          <Badge className={`${prioridadeColor[conselho.prioridade]} shrink-0 text-xs`}>
+                            {conselho.prioridade === "alta" && "Alta"}
+                            {conselho.prioridade === "media" && "Média"}
+                            {conselho.prioridade === "baixa" && "Baixa"}
                           </Badge>
                         </div>
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground leading-relaxed">
+                  <CardContent className="pt-0">
+                    <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                       {conselho.descricao}
                     </p>
                   </CardContent>
