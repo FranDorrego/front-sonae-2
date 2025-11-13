@@ -57,7 +57,7 @@ const tarefasCarniceria: Tarefa[] = [
   {
     id: "tc1",
     titulo: "Preparar Cortes Especiais",
-    descricao: "Cliente solicitou 5kg de picanha cortada em bifes de 200g.",
+    descricao: "Nível de stock baixo detectado. Necessário reposição nas próximas 2 horas.",
     zona: "carniceria",
     criadaPorIA: false,
     status: "pendente",
