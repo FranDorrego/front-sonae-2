@@ -10,6 +10,7 @@ import { getLojas, getEstadisticas, Loja } from "@/services/backendService";
 import { getHistoricoConsumo, HistoricoConsumo } from "@/services/mockConsumptionData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 type OrdenacaoCampo = "percentualVendas" | "percentualEspaco" | "eficiencia";
 
@@ -258,36 +259,53 @@ export default function Estatisticas() {
                           <span>Últimos 30 dias</span>
                           <span>Máx: {maxCantidad} | Mín: {minCantidad}</span>
                         </div>
-                        <div className="flex items-end gap-0.5 sm:gap-1 h-24 sm:h-28 md:h-32">
-                          {item.datos.map((dato, idx) => {
-                            const height = (dato.cantidad / maxCantidad) * 100;
-                            const isRecent = idx >= item.datos.length - 7;
-                            
-                            return (
-                              <div
-                                key={idx}
-                                className="flex-1 group relative"
-                              >
-                                <div
-                                  className={`w-full rounded-t transition-all ${
-                                    isRecent 
-                                      ? "bg-primary hover:bg-primary/80" 
-                                      : "bg-primary/40 hover:bg-primary/60"
-                                  }`}
-                                  style={{ height: `${height}%` }}
-                                />
-                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-popover text-popover-foreground text-[10px] sm:text-xs rounded px-1.5 sm:px-2 py-1 whitespace-nowrap shadow-lg border z-10">
-                                  {new Date(dato.fecha).toLocaleDateString("pt-BR", { 
-                                    day: "2-digit", 
-                                    month: "2-digit" 
-                                  })}
-                                  <br />
-                                  {dato.cantidad} unidades
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
+                        <ResponsiveContainer width="100%" height={200}>
+                          <LineChart data={item.datos} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+                            <XAxis 
+                              dataKey="fecha" 
+                              tickFormatter={(value) => {
+                                const date = new Date(value);
+                                return `${date.getDate()}/${date.getMonth() + 1}`;
+                              }}
+                              tick={{ fontSize: 10 }}
+                              interval="preserveStartEnd"
+                            />
+                            <YAxis 
+                              tick={{ fontSize: 10 }}
+                            />
+                            <Tooltip 
+                              content={({ active, payload }) => {
+                                if (active && payload && payload.length) {
+                                  const data = payload[0].payload;
+                                  return (
+                                    <div className="bg-popover text-popover-foreground text-xs rounded px-3 py-2 shadow-lg border">
+                                      <p className="font-medium">
+                                        {new Date(data.fecha).toLocaleDateString("pt-BR", {
+                                          day: "2-digit",
+                                          month: "2-digit",
+                                          year: "numeric"
+                                        })}
+                                      </p>
+                                      <p className="text-primary font-semibold">
+                                        {data.cantidad} unidades
+                                      </p>
+                                    </div>
+                                  );
+                                }
+                                return null;
+                              }}
+                            />
+                            <Line 
+                              type="monotone" 
+                              dataKey="cantidad" 
+                              stroke="hsl(var(--primary))" 
+                              strokeWidth={2}
+                              dot={{ fill: "hsl(var(--primary))", r: 3 }}
+                              activeDot={{ r: 5 }}
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
                       </div>
                     </CardContent>
                   </Card>
