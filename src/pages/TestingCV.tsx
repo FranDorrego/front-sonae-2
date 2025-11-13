@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ArrowLeft, Upload, Loader2 } from "lucide-react";
+import { ArrowLeft, Upload, Loader2, Database } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { API_BASE_URL } from "@/services/api";
+import { DatasetLibrary } from "@/components/DatasetLibrary";
 
 interface UploadResponse {
   ok: boolean;
@@ -61,6 +62,7 @@ export default function TestingCV() {
   const [finalResult, setFinalResult] = useState<any>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedStepIndex, setSelectedStepIndex] = useState<number | null>(null);
+  const [showDatasetLibrary, setShowDatasetLibrary] = useState(false);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -160,18 +162,27 @@ export default function TestingCV() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
-        <div className="container flex h-16 items-center gap-4 px-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/")}
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <h1 className="text-lg font-semibold">Visualizar CV / Testing CV</h1>
-            <p className="text-xs text-muted-foreground">Teste o processo de análise de imagens</p>
+        <div className="container flex h-16 items-center justify-between gap-4 px-4">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/")}
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div>
+              <h1 className="text-lg font-semibold">Visualizar CV / Testing CV</h1>
+              <p className="text-xs text-muted-foreground">Teste o processo de análise de imagens</p>
+            </div>
           </div>
+          <Button
+            variant="outline"
+            onClick={() => setShowDatasetLibrary(true)}
+          >
+            <Database className="h-4 w-4 mr-2" />
+            DataSet
+          </Button>
         </div>
       </header>
 
@@ -371,6 +382,12 @@ export default function TestingCV() {
             )}
           </DialogContent>
         </Dialog>
+
+        {/* Dataset Library */}
+        <DatasetLibrary
+          open={showDatasetLibrary}
+          onOpenChange={setShowDatasetLibrary}
+        />
       </main>
     </div>
   );
