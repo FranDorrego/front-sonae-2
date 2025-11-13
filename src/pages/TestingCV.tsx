@@ -11,12 +11,24 @@ interface UploadResponse {
   message: string;
   saved_path?: string;
   forward_response?: {
-    info: {
-      product_detected: string;
-      stock_percent: number;
-      alerts: string[];
+    ok: boolean;
+    message: string;
+    saved_path: string;
+    forward_response?: {
+      info: {
+        products_detected: string[];
+        total_boxes: number;
+        stock_percent: number;
+        fill_distribution: {
+          empty: number;
+          low: number;
+          medium: number;
+          full: number;
+        };
+        alerts: string[];
+      };
+      steps: string[];
     };
-    steps: string[];
   };
 }
 
@@ -71,8 +83,9 @@ export default function TestingCV() {
         return;
       }
 
-      // Imagen válida, mostrar pasos
-      const stepImages = data.forward_response?.steps || [];
+      // Imagen válida, obtener datos anidados
+      const forwardData = data.forward_response?.forward_response;
+      const stepImages = forwardData?.steps || [];
       setSteps(stepImages);
       
       // Mostrar pasos en secuencia con animación
@@ -81,9 +94,9 @@ export default function TestingCV() {
         setCurrentStep(i);
       }
 
-      // Al finalizar, mostrar resultado
+      // Al finalizar, mostrar resultado completo
       await new Promise(resolve => setTimeout(resolve, 1000));
-      setFinalResult(data.forward_response?.info);
+      setFinalResult(forwardData);
       
       toast({
         title: "Análise completa",
@@ -163,89 +176,115 @@ export default function TestingCV() {
 
         {/* Process Steps */}
         {steps.length > 0 && (
-          <div className="space-y-8 animate-fade-in">
-            {steps.map((stepUrl, index) => (
-              <Card
-                key={index}
-                className={`p-6 transition-all duration-700 ${
-                  currentStep >= index 
-                    ? 'opacity-100 scale-100' 
-                    : 'opacity-40 scale-95'
-                }`}
-              >
-                <div className="flex items-center gap-4 mb-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold transition-all ${
-                    currentStep >= index 
-                      ? 'bg-primary text-primary-foreground shadow-lg scale-110' 
-                      : 'bg-muted text-muted-foreground'
-                  }`}>
-                    {index + 1}
-                  </div>
-                  <p className="text-lg font-semibold">
-                    {index === 0 && "Imagem Original"}
-                    {index === 1 && "Detecção de Objetos"}
-                    {index === 2 && "Segmentação"}
-                    {index === 3 && "Classificação"}
-                    {index === 4 && "Resultado Final"}
-                    {index > 4 && `Passo ${index + 1}`}
-                  </p>
+          <div className="space-y-8">
+            <h2 className="text-2xl font-bold text-center">Proceso de Análisis</h2>
+            <div className="grid gap-6">
+              {steps.map((stepUrl, index) => (
+                <div
+                  key={index}
+                  className={`transition-all duration-500 ${
+                    index <= currentStep ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                  }`}
+                >
+                  {index <= currentStep && (
+                    <Card className="p-6">
+                      <div className="flex flex-col items-center gap-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">
+                            {index + 1}
+                          </div>
+                          <h3 className="text-xl font-semibold">
+                            Paso {index + 1}
+                          </h3>
+                        </div>
+                        <img
+                          src={stepUrl}
+                          alt={`Paso ${index + 1}`}
+                          className="w-full max-w-3xl rounded-lg border shadow-lg"
+                        />
+                      </div>
+                    </Card>
+                  )}
                 </div>
-                <img
-                  src={stepUrl}
-                  alt={`Step ${index + 1}`}
-                  className="w-full rounded-lg border shadow-md"
-                />
-              </Card>
-            ))}
+              ))}
+            </div>
           </div>
         )}
 
         {/* Final Result */}
         {finalResult && (
-          <Card className="p-8 mt-8 animate-fade-in">
-            <h2 className="text-2xl font-bold mb-6 text-center">Resultado</h2>
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-primary/10 p-6 rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-2">Produto Detectado</p>
-                  <p className="text-2xl font-bold">{finalResult.product_detected}</p>
-                </div>
-                <div className="bg-primary/10 p-6 rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-2">Nível de Stock</p>
-                  <p className="text-2xl font-bold">{finalResult.stock_percent}%</p>
-                </div>
-              </div>
+          <div className="space-y-8 animate-fade-in mt-8">
+            <h2 className="text-2xl font-bold text-center">Resultado del Análisis</h2>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Card className="p-6">
+                <h3 className="text-sm font-medium text-muted-foreground mb-2">Produtos Detectados</h3>
+                <p className="text-2xl font-bold">{finalResult.info.products_detected.length}</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {finalResult.info.products_detected.join(", ")}
+                </p>
+              </Card>
               
-              {finalResult.alerts && finalResult.alerts.length > 0 && (
-                <div className="bg-destructive/10 p-6 rounded-lg">
-                  <p className="text-sm font-semibold mb-3">Alertas</p>
-                  <ul className="space-y-2">
-                    {finalResult.alerts.map((alert: string, i: number) => (
-                      <li key={i} className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-destructive" />
-                        <span>{alert}</span>
-                      </li>
-                    ))}
-                  </ul>
+              <Card className="p-6">
+                <h3 className="text-sm font-medium text-muted-foreground mb-2">Total de Boxes</h3>
+                <p className="text-2xl font-bold">{finalResult.info.total_boxes}</p>
+              </Card>
+              
+              <Card className="p-6">
+                <h3 className="text-sm font-medium text-muted-foreground mb-2">Nível de Stock</h3>
+                <p className="text-2xl font-bold">{finalResult.info.stock_percent}%</p>
+              </Card>
+              
+              <Card className="p-6">
+                <h3 className="text-sm font-medium text-muted-foreground mb-2">Alertas</h3>
+                <div className="flex flex-wrap gap-2">
+                  {finalResult.info.alerts.map((alert: string, i: number) => (
+                    <span
+                      key={i}
+                      className="px-2 py-1 bg-destructive/10 text-destructive text-xs rounded-md"
+                    >
+                      {alert}
+                    </span>
+                  ))}
                 </div>
-              )}
+              </Card>
+            </div>
 
-              <div className="bg-muted p-4 rounded-lg">
-                <p className="text-xs font-mono text-muted-foreground mb-2">JSON</p>
-                <pre className="text-xs overflow-auto">
-                  {JSON.stringify(finalResult, null, 2)}
-                </pre>
+            <Card className="p-6">
+              <h3 className="text-sm font-medium text-muted-foreground mb-2">Distribución de Llenado</h3>
+              <div className="grid grid-cols-4 gap-4 mt-4">
+                <div className="text-center">
+                  <p className="text-2xl font-bold">{finalResult.info.fill_distribution.empty}</p>
+                  <p className="text-xs text-muted-foreground">Vacío</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold">{finalResult.info.fill_distribution.low}</p>
+                  <p className="text-xs text-muted-foreground">Bajo</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold">{finalResult.info.fill_distribution.medium}</p>
+                  <p className="text-xs text-muted-foreground">Medio</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold">{finalResult.info.fill_distribution.full}</p>
+                  <p className="text-xs text-muted-foreground">Lleno</p>
+                </div>
               </div>
+            </Card>
 
-              <Button 
-                onClick={resetUpload} 
-                className="w-full"
-                size="lg"
-              >
-                Analisar Nova Imagem
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-4">JSON Completo</h3>
+              <pre className="bg-muted p-4 rounded-lg overflow-auto max-h-96 text-sm">
+                {JSON.stringify(finalResult, null, 2)}
+              </pre>
+            </Card>
+
+            <div className="flex justify-center">
+              <Button onClick={resetUpload} size="lg">
+                Nova Análise
               </Button>
             </div>
-          </Card>
+          </div>
         )}
       </main>
     </div>
