@@ -8,8 +8,8 @@ import { Tarefa, getTarefasPorZona } from "@/services/mockTaskData";
 import { Clock, AlertCircle } from "lucide-react";
 
 const zonas = [
-  { value: "reposicao", label: "Reposição" },
   { value: "carniceria", label: "Carniceria" },
+  { value: "reposicao", label: "Reposição" },
   { value: "panaderia", label: "Padaria" },
 ];
 

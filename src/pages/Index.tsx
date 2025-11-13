@@ -57,6 +57,7 @@ const Index = () => {
               </div>
             </Button>
 
+
             <Button
               variant="outline"
               className="h-auto py-4 px-6 flex items-center justify-start gap-4 hover:bg-primary hover:text-primary-foreground transition-all"
@@ -68,6 +69,7 @@ const Index = () => {
                 <div className="text-xs opacity-70">Visão estratégica e análise completa</div>
               </div>
             </Button>
+
           </div>
         </DialogContent>
       </Dialog>

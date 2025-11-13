@@ -16,6 +16,10 @@ export default function TopNav({ stores, selectedStore, onStoreChange, showMockB
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
   const isOperador = currentView === "operador";
+
+  const getHomeUrl = () => {
+    window.location.href = "/";
+  }
   
   // Construir URLs con el parámetro view
   const buildUrl = (path: string) => {
@@ -26,7 +30,7 @@ export default function TopNav({ stores, selectedStore, onStoreChange, showMockB
     <header className="border-b border-border/40 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between gap-2 sm:gap-4">
         {/* Logo */}
-        <img src={logo} alt="Sonae" className="h-6 sm:h-8 object-contain flex-shrink-0" />
+        <img src={logo} alt="Sonae" className="h-6 sm:h-8 object-contain flex-shrink-0 cursor-pointer" onClick={getHomeUrl}  />
         
         {/* Navigation - hidden on mobile */}
         <nav className="hidden md:flex gap-2 flex-1 justify-center">
