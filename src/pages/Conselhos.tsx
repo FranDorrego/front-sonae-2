@@ -77,7 +77,7 @@ export default function Conselhos() {
       <div className="container mx-auto p-3 sm:p-4 md:p-6 lg:p-8 max-w-4xl">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-2 md:mb-3">
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground">
-            Conselhos IA
+            Task Management Assitent
           </h1>
           <AjudaConselhoChat />
         </div>

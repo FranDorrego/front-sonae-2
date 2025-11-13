@@ -19,7 +19,7 @@ const mockDataset: DatasetItem[] = [
     id: "26786",
     name: "Tomate",
     description: "Tomate rojo fresco de calidad premium",
-    images: ["https://images.unsplash.com/photo-1546470427-227e93b99ae0?w=400"],
+    images: ["https://s3.abcstatics.com/abc/sevilla/media/gurme/2022/12/30/s/truco-como-conservar-tomates-frescos-k9vH--1248x698@abc.jpg"],
   },
   {
     id: "11908",
