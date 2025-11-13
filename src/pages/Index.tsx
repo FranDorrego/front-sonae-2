@@ -24,7 +24,7 @@ const Index = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={() => {}}>
         <DialogContent className="sm:max-w-md w-full max-w-[95vw]">
           <DialogHeader>
             <DialogTitle className="text-xl sm:text-2xl">Selecione sua Vista</DialogTitle>
