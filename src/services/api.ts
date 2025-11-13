@@ -1,7 +1,7 @@
 import { ApiResponse } from "@/types";
 
 // URL base para todas as chamadas da API
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://backagentesonae.sonae.arducloud.com";
 
 // Nome do cookie de sessão
 const SESSION_COOKIE = "Autenticacao";
