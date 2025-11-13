@@ -4,6 +4,7 @@ import Layout from "@/components/Layout";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import AjudaEstrategicaChat from "@/components/AjudaEstrategicaChat";
 import { getLojas, Loja } from "@/services/backendService";
 import {
   Users, 
@@ -43,88 +44,88 @@ const conselhosEstrategicos: ConselhoEstrategico[] = [
   {
     id: "ce1",
     tipo: "recursos-humanos",
-    titulo: "Avaliar reforço de equipe na Carniceria",
-    descricao: "Há 15 tarefas pendentes acumuladas nas últimas 2 semanas na zona de carniceria. O tempo médio de conclusão aumentou 40%. Recomenda-se avaliar a carga de trabalho com o gerente e considerar contratação de mais 1-2 colaboradores para esta zona.",
+    titulo: "Muitas tarefas pendentes acumuladas",
+    descricao: "Se você tem muitas tarefas pendentes, avalie contratar mais colaboradores e/ou conversar com o gerente para entender se há sobrecarga na equipe. A eficiência operacional pode estar comprometida.",
     prioridade: "alta",
     loja: "Loja Centro",
   },
   {
     id: "ce2",
     tipo: "manutencao",
-    titulo: "Verificação urgente de equipamentos de refrigeração",
-    descricao: "Foram reportados 6 problemas de temperatura em equipamentos de refrigeração no último mês, com 3 incidentes críticos. Agende uma inspeção completa com a equipe de manutenção e considere um plano de manutenção preventiva trimestral.",
+    titulo: "Equipamentos com problemas recorrentes",
+    descricao: "Você tem muitos equipamentos quebrados ou desgastados com notificações de problemas frequentes. Analise conversar com a equipe de manutenção para ver o que está acontecendo nesta loja e se é necessário um plano de substituição.",
     prioridade: "alta",
     loja: "Loja Sul",
   },
   {
     id: "ce3",
     tipo: "vendas",
-    titulo: "Declínio significativo nas vendas - Investigação necessária",
-    descricao: "As vendas caíram 18% em relação ao mesmo período do mês anterior, sem fatores externos conhecidos (clima, feriados, promoções). Reúna-se urgentemente com o gerente para investigar possíveis causas: atendimento, qualidade dos produtos, concorrência local ou problemas operacionais.",
+    titulo: "Declínio nas vendas sem precedente",
+    descricao: "As vendas estão caindo sem uma lógica aparente. Converse com o gerente para entender o que está acontecendo e por que as vendas estão em queda. Pode haver problemas operacionais, de atendimento ou com a concorrência local.",
     prioridade: "alta",
     loja: "Loja Norte",
   },
   {
     id: "ce4",
     tipo: "inventario",
-    titulo: "Ruptura recorrente - Maçãs Gala",
-    descricao: "Maçãs Gala ficaram sem estoque 7 vezes nas últimas 3 semanas, resultando em perda estimada de €850 em vendas. Analise os dados de fornecimento: a) Aumentar pedidos semanais de 120kg para 180kg, b) Verificar capacidade de armazenamento na câmara fria, c) Considerar fornecedor alternativo.",
+    titulo: "Falta frequente de frutas e verduras",
+    descricao: "Acontece muito de faltar frutas e/ou verduras porque não há stock suficiente de reserva. Analise os envios de maçã para esta loja que está ficando sem durante vários dias consecutivos. Pode ser necessário ajustar a frequência de pedidos.",
     prioridade: "alta",
     loja: "Loja Centro",
   },
   {
     id: "ce5",
     tipo: "inventario",
-    titulo: "Excesso de desperdício - Verduras de folha",
-    descricao: "Taxa de desperdício de verduras de folha está em 22% (meta: 12%). Nas últimas 4 semanas foram descartados 45kg de alfaces e 38kg de espinafres. Recomenda-se: ajustar quantidade de pedidos, melhorar rotação de produtos e revisar processo de recebimento com o gerente.",
+    titulo: "Excesso de desperdício detectado",
+    descricao: "Esta loja está com alto índice de desperdício de produtos perecíveis. Revise os processos de rotação de estoque e a quantidade de pedidos. Converse com o gerente sobre as práticas de armazenamento e validade.",
     prioridade: "media",
     loja: "Loja Norte",
   },
   {
     id: "ce6",
     tipo: "operacional",
-    titulo: "Otimização de turnos para horários de pico",
-    descricao: "Análise de movimento mostra: baixo fluxo entre 14h-16h (apenas 12% do movimento diário) e alto fluxo às 18h-20h (38% do movimento). Considere reorganizar turnos: reduzir 1 colaborador no período da tarde e reforçar com 2 no horário de pico. Economia estimada: €420/mês com melhor cobertura.",
+    titulo: "Horários de pico mal distribuídos",
+    descricao: "Durante o horário das 14h às 16h você tem menor movimento do que das 18h às 20h. Pode analisar dar um reforço nas horas de pico ou modificar o horário dos colaboradores para que os descansos sejam melhor organizados.",
     prioridade: "media",
     loja: "Loja Sul",
   },
   {
     id: "ce7",
     tipo: "operacional",
-    titulo: "Atraso sistemático na preparação matinal",
-    descricao: "A abertura da loja tem ocorrido com 15-25 minutos de atraso nas últimas 2 semanas. Identifique com o gerente se há problemas de: transporte dos colaboradores, processos de preparação muito longos, ou necessidade de ajuste no horário de entrada da equipe de abertura.",
+    titulo: "Abertura da loja com atrasos",
+    descricao: "A loja está abrindo com atraso nos últimos dias. Verifique com o gerente se há problemas de transporte dos colaboradores ou se o horário de entrada precisa ser ajustado para garantir a abertura no horário correto.",
     prioridade: "media",
     loja: "Loja Centro",
   },
   {
     id: "ce8",
     tipo: "manutencao",
-    titulo: "Plano de renovação de equipamentos",
-    descricao: "3 balanças digitais e 2 câmaras frias estão em uso há mais de 8 anos (vida útil recomendada: 6-7 anos). Os custos de manutenção aumentaram 65% este ano. Prepare um orçamento para substituição gradual nos próximos 6 meses antes de ocorrerem falhas críticas.",
+    titulo: "Equipamentos próximos ao fim da vida útil",
+    descricao: "Alguns equipamentos essenciais estão próximos ou já ultrapassaram a vida útil recomendada. Antes que ocorram falhas críticas, prepare um orçamento para substituição gradual nos próximos meses.",
     prioridade: "media",
     loja: "Loja Sul",
   },
   {
     id: "ce9",
     tipo: "vendas",
-    titulo: "Oportunidade: Produtos sazonais de verão",
-    descricao: "Aproximação do verão detectada. Histórico mostra aumento de 35% nas vendas de melancia, melão e frutas tropicais entre junho-agosto. Recomenda-se: negociar contratos com fornecedores com antecedência, aumentar espaço de exposição em 20%, e preparar campanha promocional.",
+    titulo: "Oportunidade: Produtos sazonais",
+    descricao: "A temporada de verão se aproxima. Histórico mostra aumento significativo nas vendas de frutas tropicais e melancia. Negocie com fornecedores antecipadamente e prepare o espaço de exposição para aproveitar a sazonalidade.",
     prioridade: "baixa",
     loja: "Loja Norte",
   },
   {
     id: "ce10",
     tipo: "recursos-humanos",
-    titulo: "Necessidade de treinamento - Novos colaboradores",
-    descricao: "4 novos colaboradores contratados nas últimas 6 semanas. Taxa de erros operacionais aumentou 28% (etiquetagem incorreta, produtos mal armazenados). Organize sessão de treinamento intensivo de 2 dias focado em: procedimentos de qualidade, sistema de refrigeração e atendimento ao cliente.",
+    titulo: "Novos colaboradores precisam de treinamento",
+    descricao: "Você contratou novos colaboradores recentemente e a taxa de erros operacionais aumentou. Organize uma sessão de treinamento intensivo sobre procedimentos, qualidade e atendimento ao cliente para padronizar as operações.",
     prioridade: "media",
     loja: "Loja Centro",
   },
   {
     id: "ce11",
     tipo: "reconhecimento",
-    titulo: "Excelente desempenho - Parabenize a equipe!",
-    descricao: "Esta loja alcançou 96% de eficiência operacional nas últimas 5 semanas consecutivas, com zero rupturas críticas e satisfação do cliente em 4.7/5. Resultados excepcionais! Considere: reconhecimento público da equipe, incentivo financeiro ou bônus, e compartilhar as melhores práticas com outras lojas.",
+    titulo: "Métricas excelentes - Parabenize a equipe!",
+    descricao: "Esta loja está com métricas muito boas durante as últimas semanas. Você pode dar um reconhecimento para animar os colaboradores pela organização e eficiência. Considere compartilhar as boas práticas com outras lojas.",
     prioridade: "baixa",
     loja: "Loja Sul",
   },
@@ -132,9 +133,25 @@ const conselhosEstrategicos: ConselhoEstrategico[] = [
     id: "ce12",
     tipo: "reconhecimento",
     titulo: "Redução impressionante de desperdício",
-    descricao: "A taxa de desperdício desta loja caiu de 19% para 11% em 2 meses (-42% de redução), economizando aproximadamente €1.250. A equipe está implementando excelentes práticas de gestão. Recomenda-se reconhecimento formal e documentar o processo para replicar em outras unidades.",
+    descricao: "A equipe desta loja conseguiu reduzir significativamente o desperdício nos últimos meses. Parabenize a equipe e documente as práticas que estão funcionando para replicar em outras unidades.",
     prioridade: "baixa",
     loja: "Loja Centro",
+  },
+  {
+    id: "ce13",
+    tipo: "recursos-humanos",
+    titulo: "Alta rotatividade de colaboradores",
+    descricao: "Esta loja tem apresentado alta rotatividade de funcionários. Converse com o gerente para entender se há problemas de ambiente de trabalho, salários ou gestão que precisam ser endereçados.",
+    prioridade: "alta",
+    loja: "Loja Norte",
+  },
+  {
+    id: "ce14",
+    tipo: "vendas",
+    titulo: "Produtos com baixo giro precisam de ação",
+    descricao: "Alguns produtos ocupam espaço valioso mas têm baixíssimo giro de vendas. Avalie com o gerente se vale manter esses itens ou substituir por produtos de maior demanda para otimizar o espaço e aumentar o faturamento.",
+    prioridade: "media",
+    loja: "Loja Sul",
   },
 ];
 
@@ -191,9 +208,12 @@ export default function ConselhosEstrategico() {
     >
       <div className="container mx-auto p-3 sm:p-4 md:p-6 max-w-6xl">
         <div className="mb-4 md:mb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-            <Building2 className="h-5 w-5 sm:h-6 sm:w-6" />
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">Conselhos Estratégicos</h1>
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4 mb-2">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <Building2 className="h-5 w-5 sm:h-6 sm:w-6" />
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">Conselhos Estratégicos</h1>
+            </div>
+            <AjudaEstrategicaChat />
           </div>
           <p className="text-sm md:text-base text-muted-foreground">
             Análises e recomendações para gestão estratégica da loja

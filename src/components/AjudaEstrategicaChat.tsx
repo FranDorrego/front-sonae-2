@@ -11,22 +11,22 @@ interface Mensagem {
   timestamp: Date;
 }
 
-const RESPOSTAS_MOCK = [
-  "Entendo sua preocupação. Com base nos dados históricos, recomendo preparar a equipe com antecedência para esse período.",
-  "Boa observação. Segundo a análise do fluxo de clientes, poderíamos otimizar essa área para melhorar a eficiência operacional.",
-  "É uma excelente questão. Os dados mostram que durante esse período há um aumento significativo na demanda.",
-  "Obrigado por compartilhar isso. Vou analisar os padrões atuais da loja e te dar uma recomendação mais específica.",
-  "Perspectiva interessante. Com base nas estatísticas desta loja, isso pode trazer resultados positivos.",
-  "Segundo a análise estratégica, essa situação requer atenção. Sugiro conversar com o gerente para entender melhor o contexto.",
-  "Os indicadores mostram que essa é uma área que precisa de melhoria. Recomendo implementar um plano de ação nas próximas semanas.",
+const RESPOSTAS_ESTRATEGICAS = [
+  "Analisando os dados desta loja, percebo que há oportunidades de melhoria na gestão de turnos. Recomendo revisar a distribuição de colaboradores nos horários de pico.",
+  "Com base nas métricas das últimas semanas, esta loja está performando bem. Sugiro documentar as práticas que estão funcionando para compartilhar com outras unidades.",
+  "Os indicadores mostram que há um problema recorrente de equipamentos. Recomendo uma reunião com manutenção para avaliar se é necessário um plano de substituição.",
+  "Segundo a análise de vendas, há uma tendência de queda que precisa ser investigada. Sugiro conversar com o gerente para entender se há fatores externos ou internos afetando o desempenho.",
+  "Esta loja tem apresentado rupturas frequentes de estoque. Recomendo revisar os processos de pedido e a capacidade de armazenamento para evitar perdas de vendas.",
+  "Os dados indicam que o desperdício está acima da média. Sugiro implementar um plano de ação focado em melhorar a rotação de produtos e treinamento da equipe.",
+  "Com base na análise estratégica, há uma oportunidade de otimizar os horários dos colaboradores. Recomendo ajustar os turnos para garantir melhor cobertura nos períodos de maior movimento.",
 ];
 
-export default function AjudaConselhoChat() {
+export default function AjudaEstrategicaChat() {
   const [open, setOpen] = useState(false);
   const [mensagens, setMensagens] = useState<Mensagem[]>([
     {
       role: "assistant",
-      content: "Que dúvida você tem sobre esta loja? Estou aqui para ajudar com análises e recomendações estratégicas.",
+      content: "Que dúvida você tem sobre esta loja? Posso ajudar com análise estratégica, métricas de desempenho e recomendações para otimização.",
       timestamp: new Date(),
     },
   ]);
@@ -46,9 +46,9 @@ export default function AjudaConselhoChat() {
     setInputMensagem("");
     setEnviando(true);
 
-    // Simular respuesta de la IA
+    // Simular resposta da IA com foco estratégico
     setTimeout(() => {
-      const respostaMock = RESPOSTAS_MOCK[Math.floor(Math.random() * RESPOSTAS_MOCK.length)];
+      const respostaMock = RESPOSTAS_ESTRATEGICAS[Math.floor(Math.random() * RESPOSTAS_ESTRATEGICAS.length)];
       const respostaIA: Mensagem = {
         role: "assistant",
         content: respostaMock,
@@ -56,7 +56,7 @@ export default function AjudaConselhoChat() {
       };
       setMensagens((prev) => [...prev, respostaIA]);
       setEnviando(false);
-    }, 1000);
+    }, 1200);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -71,10 +71,12 @@ export default function AjudaConselhoChat() {
       <Button
         onClick={() => setOpen(true)}
         variant="outline"
+        size="sm"
         className="gap-2"
       >
         <MessageCircle className="w-4 h-4" />
-        Ajuda/Conselho
+        <span className="hidden sm:inline">Análise Estratégica</span>
+        <span className="sm:hidden">Análise</span>
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
@@ -82,9 +84,9 @@ export default function AjudaConselhoChat() {
           <DialogHeader className="p-6 pb-4 border-b">
             <div className="flex items-center justify-between">
               <div>
-                <DialogTitle className="text-xl">Ajuda e Conselhos IA</DialogTitle>
+                <DialogTitle className="text-xl">Análise Estratégica IA</DialogTitle>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Tire suas dúvidas sobre a gestão da loja
+                  Visão completa sobre a gestão e desempenho da loja
                 </p>
               </div>
               <Button
@@ -142,7 +144,7 @@ export default function AjudaConselhoChat() {
                 value={inputMensagem}
                 onChange={(e) => setInputMensagem(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Digite sua pergunta ou dúvida sobre a loja..."
+                placeholder="Pergunte sobre desempenho, métricas ou estratégias para esta loja..."
                 className="min-h-[60px] resize-none"
                 disabled={enviando}
               />
