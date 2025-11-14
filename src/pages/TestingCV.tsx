@@ -192,7 +192,7 @@ export default function TestingCV() {
           <div className="flex items-center justify-center min-h-[60vh]">
             <input
               type="file"
-              accept="image/*"
+              accept=".png,.jpg,.jpeg,.svg"
               onChange={handleFileSelect}
               className="hidden"
               id="file-upload"
@@ -204,7 +204,7 @@ export default function TestingCV() {
                   <Upload className="h-20 w-20 mx-auto mb-6 text-muted-foreground" />
                   <p className="text-lg font-medium mb-2">Selecione uma imagem</p>
                   <p className="text-sm text-muted-foreground">
-                    JPG, PNG (máx. 10MB)
+                    PNG, JPG, JPEG, SVG (máx. 10MB)
                   </p>
                 </div>
               </Card>
